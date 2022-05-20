@@ -1,0 +1,364 @@
+@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+
+body{
+    font-family: 'Noto Sans TC', '微軟正黑體', sans-serif;
+    margin:0px;
+    padding:0px
+}
+.modal{
+    display: none;
+    position: absolute; 
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%;
+    overflow: auto; 
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+.mpdalHeader{
+    position: relative;
+    top: 0px;
+    padding: 5px ;
+    background: linear-gradient(270deg, #337788 0%, #66AABB 100%);
+    border-radius: 5px 5px 0px 0px;
+}
+.modalContent{
+    background-color: #FFFFFF;
+    margin: auto;
+    margin-top: 70px;
+    border-radius: 6px;
+    box-shadow: 0px 4px 60px #AAAAAA;
+    width: 340px;
+    height: 310px;
+    text-align: center;
+}
+
+.modalContent2{
+    background-color: #FFFFFF;
+    margin: auto;
+    margin-top: 70px;
+    border-radius: 6px;
+    box-shadow: 0px 4px 60px #AAAAAA;
+    width: 340px;
+    height: 380px;
+
+    text-align: center;
+}
+#closeSignin{    
+    position: relative;
+    right: 20px;
+    top: 6px;
+    width: 16px;
+    height: 16px;
+    float: right;
+}
+
+.formTitle{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 24px;
+    color: #666666;
+    margin-top: 5px;
+}
+.formChange{
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 13px;
+
+    color: #666666;
+}
+.modalContent ::placeholder{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 13px;
+    display: flex;
+    align-items: center;
+    color: #666666;
+}
+.modalContent input[type=submit] {
+    background: #448899;
+    width: 90%;
+    height: 50px;
+    border-radius:5px; 
+    border-width: 0px;
+    cursor:pointer;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 16px;
+    color: #FFFFFF;
+}
+.modalContent2 ::placeholder{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 13px;
+    display: flex;
+    align-items: center;
+    color: #666666;
+}
+.modalContent2 input[type=submit] {
+    background: #448899;
+    width: 90%;
+    height: 50px;
+    border-radius:5px; 
+    border-width: 0px;
+    cursor:pointer;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 16px;
+    color: #FFFFFF;
+}
+.messageText{
+    color:red;
+}
+.front{
+    position:absolute;
+    top:25%;
+    left:19%;
+    z-index: 3;
+}
+.navbar{
+    overflow: hidden;
+    display: flex;
+    margin-right: 3px;
+    background: #FFFFFF;
+    width: 100%;
+    height: 54px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+}
+
+.header{
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    width: 1250px;
+    height: 34px;
+    left: 360px;
+    top: 10px;
+}
+.title{
+    display: flex;
+    height: 34px;
+    width: 150px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 34px;
+    color: rgba(68, 136, 153, 1);
+
+}
+.search{
+    display: flex;
+    margin-top: 20px;
+    filter: drop-shadow(0px 0px 20px #AABBCC);
+}
+::placeholder{
+    color: #757575;
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 13px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    left: 20px;
+    bottom: 17px;
+}
+.frame2{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex:auto;
+    margin-right: 10px;
+    text-align: center ;
+    font-weight: 400;
+    font-size: 16px;
+}
+.click{
+    cursor: pointer;
+    color: #666666;
+    text-decoration: none
+}
+.welcome{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-start;
+    flex: auto;
+    position: relative;
+    height: 400px;
+    width: 100%;
+    background-image:url(tears\ in\ rain.jpg);
+
+    /* background: 
+    linear-gradient(135deg, #AADDEE 0%, #66AABB 100%); */
+    background-repeat:no-repeat;
+    background-attachment: fixed;
+    background-position: bottom;
+    background-size: cover;
+
+}
+.slogan{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: #f8f8f8;
+}
+.icon{
+    border:2px #448899 solid;
+    background-repeat:no-repeat;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+}
+/* .weclomeImg{
+    background-image:url(tears\ in\ rain.jpg);
+    background-repeat:no-repeat;
+
+    width: 50%;
+
+
+    object-fit: none;
+    aspect-ratio: 1/1;
+} */
+.bottom{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #757575;
+    position: relative;
+    width: 100%;
+    height: 104px;
+
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 13px;
+
+    justify-content: center;
+    color: #FFFFFF;
+}
+.text{
+    flex:auto;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+}
+.frame{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.pic{
+    flex: none;
+    width: 280px;
+    margin: 10px;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    color: #757575;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #E8E8E8;
+    box-sizing: border-box;
+}
+.Searchpic{
+    flex: none;
+    width: 280px;
+    margin: 10px;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    color: #757575;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #E8E8E8;
+    box-sizing: border-box;
+}
+img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* aspect-ratio: 16/9; */
+}
+.logo{
+    height: 25px;
+    width: 25px;
+    display: none;
+}
+
+@media screen and (min-width:601px) and (max-width:1200px) {
+    .frame{
+        width: 90%;
+    }
+    .pic{
+        width: 45%;
+    }
+    .Searchpic{
+        width: 45%;
+    }
+}
+@media screen and (min-width: 360px) and (max-width:600px) {
+
+
+    .header{
+        position: relative;
+        width: 100%;
+
+        left: 0px;
+        top: 2px;
+
+    }
+    .title{
+        width: 150px;
+        height: 34px;
+        left: 10px;
+        top: 10px;;
+    }
+    .front{
+        left: 2%;
+        width: 80%;
+
+    }
+    .search{
+        width: 95%;
+        height: 46px;
+    }
+    input{
+        width: 230px;
+        height: 46px;
+    }
+    botton{
+        width: 60px;
+        height: 46px;
+    }
+    .welcome{
+        align-items: flex-end;
+        height: 280px;
+    }
+    .frame{
+        width: 98%;
+    }
+    .pic{
+        width: 98%;
+    }
+    .Searchpic{
+        width: 98%;
+    }
+
+}

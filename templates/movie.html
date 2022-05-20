@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieLover 場次表</title>
+    <link rel="stylesheet" href="/layout/movie/layout.css">
+</head>
+<body onload="getMovie()">
+    <div class="pic">
+    </div>
+
+    <div class="brief">
+        <div id="name_ZH" class="name"></div>
+        <div id="name_EN" class="name"></div>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+    console.log(window.location.href.split('/m'));
+    let page = window.location.href.split('/m');
+
+    function getMovie(){
+        url=page[0]+"/api/m"+page[1];
+        if (id[2]==null){
+                return "STOP";
+            }
+        fetch(url, {method:"GET"})
+        .then((response) => {
+            return response.json(); 
+        })
+        .then((data) => {
+            let list=data.data;
+            let images=list.images;
+            let piclist=[];
+
+            for (let i in images){
+                let image=images[i];
+                piclist.push(image);
+            }
+
+            console.log(pic);
+            for (let i in piclist){
+                let picFrame = document.getElementById("slides");
+                let eachPic = document.createElement("li");
+                eachPic.className="slides";
+                eachPic.id = i;
+                picFrame.appendChild(eachPic);
+                let Pic = document.createElement("img");
+                eachPic.appendChild(Pic);
+                let url = piclist[i];
+                Pic.src = url;
+
+   
+                let ol = document.getElementById("ol");
+                let divLi = document.createElement("div");
+                divLi.className="dot";
+                ol.appendChild(divLi);
+                let olinput = document.createElement("input");
+                olinput.setAttribute("type", "radio");
+                olinput.name = "dot";
+                olinput.id = "dot"+i;
+                divLi.appendChild(olinput);
+            }
+            let first = document.getElementById("dot0");
+            first.setAttribute("checked","true");
+
+            let showPic = document.getElementById(0);
+            showPic.style.cssText = "display:block";
+
+            let name=document.getElementById("name");
+            let nameText=document.createTextNode(list.name);
+            name.appendChild(nameText);
+
+            let description=document.getElementById("intro");
+            let descriptionText=document.createTextNode(list.description);
+            description.appendChild(descriptionText);
+
+            let address=document.getElementById("address");
+            let addressText=document.createTextNode(list.address);
+            address.appendChild(addressText);
+
+            let transport=document.getElementById("traffic");
+            let transportText=document.createTextNode(list.transport);
+            transport.appendChild(transportText);
+
+            let category=document.getElementById("what");
+            let categoryText=document.createTextNode(list.category);
+            category.appendChild(categoryText);
+
+            let at=document.createTextNode(" at ")
+            category.appendChild(at);
+
+            let mrtText=document.createTextNode(list.mrt);
+            category.appendChild(mrtText);
+        })
+        .catch((err) => {
+            console.log('錯誤:', err);
+        });
+    }
+    </script>
+</html>
