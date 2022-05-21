@@ -1,10 +1,7 @@
-from platform import release
-import re
-from numpy import append
+
 import requests
-import time
 from bs4 import BeautifulSoup
-import pandas as pd
+
 import datetime
 from sqlalchemy import create_engine
 import pymysql

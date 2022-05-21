@@ -1,8 +1,6 @@
-from turtle import back
-from webbrowser import get
+
 import time
 from bs4 import BeautifulSoup
-import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
