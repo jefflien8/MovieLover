@@ -102,7 +102,7 @@
     showtime_theater_id = [];
 
     function getShowtime(){
-        url = 'https://capi.showtimes.com.tw/1/events/listForProgram/'+showtime_id+'?date=2022-05-21'
+        url = 'https://capi.showtimes.com.tw/1/events/listForProgram/'+10701+'?date=2022-05-21'
         fetch(url, {method:"GET"})
             .then((response) => {
                 return response.json();
