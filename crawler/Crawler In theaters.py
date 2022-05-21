@@ -1,14 +1,8 @@
-import re
-from unittest import result
 import requests
-import time
 import datetime
-import schedule
 from bs4 import BeautifulSoup
-import pandas as pd
 from sqlalchemy import create_engine
 import pymysql
-
 import Ambassador
 import ShowTime
 
@@ -134,15 +128,15 @@ def ThisWeekNew(pageNum):
     ThisWeekNew(pageNum)
 
 def outcome():
-    df_InTheaters_movie = pd.DataFrame()
-    df_InTheaters_movie["中文名"]=movie_titles_ZH
-    df_InTheaters_movie["英文名"]=movie_titles_EN
-    # df_InTheaters_movie_id["簡介"]=movie_info
-    df_InTheaters_movie["上映日"]=release_date
-    df_InTheaters_movie["ID"]=yahoo_id
-    df_InTheaters_movie["海報Url"]=yahoo_posterUrl
-    #存到檔案做備用
-    df_InTheaters_movie.to_csv("./Yahoo Movie/InTheaters_movie_id.csv",encoding="utf-8-sig")
+    # df_InTheaters_movie = pd.DataFrame()
+    # df_InTheaters_movie["中文名"]=movie_titles_ZH
+    # df_InTheaters_movie["英文名"]=movie_titles_EN
+    # # df_InTheaters_movie_id["簡介"]=movie_info
+    # df_InTheaters_movie["上映日"]=release_date
+    # df_InTheaters_movie["ID"]=yahoo_id
+    # df_InTheaters_movie["海報Url"]=yahoo_posterUrl
+    # #存到檔案做備用
+    # df_InTheaters_movie.to_csv("./Yahoo Movie/InTheaters_movie_id.csv",encoding="utf-8-sig")
 
     # df_yahoo = pd.DataFrame(
     #     {   
@@ -179,25 +173,25 @@ def outcome():
                 conn.rollback()
                 print('IN error')
 
-# if __name__ == '__main__':
-#     Intheaters(pageNumber)
-#     ThisWeekNew(pageNumber)
-#     outcome()
+if __name__ == '__main__':
+    Intheaters(pageNumber)
+    ThisWeekNew(pageNumber)
+    outcome()
 
-# Ambassador.AmbassadorData()
-# ShowTime.showtimeData()
+Ambassador.AmbassadorData()
+ShowTime.showtimeData()
 # rerunTime = "05:34"
 # print(rerunTime)
 # def job(t):
 #     print ("I'm working...", t)
 #     return
-runtime = "05:44"
-schedule.every().day.at(runtime).do(Intheaters,1)
+# runtime = "05:44"
+# schedule.every().day.at(runtime).do(Intheaters,1)
 # schedule.every().day.at(runtime).do(ThisWeekNew,pageNumber)
 # schedule.every().day.at(runtime).do(outcome)
 # schedule.every().day.at("05:35").do(Ambassador.AmbassadorData)
 # schedule.every().day.at("05:35").do(ShowTime.showtimeData)
 
-while True:
-    schedule.run_pending()
-    time.sleep(3)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(3)

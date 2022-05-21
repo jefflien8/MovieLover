@@ -16,7 +16,7 @@
                     <div style="font-weight: 700;
                     font-size: 28px;
                     line-height: 24px;">
-                    輕鬆查詢全台北戲院場次
+                    輕鬆查詢台北戲院場次
                     </div>
                     <div style="font-weight: 400;
                     font-size: 16px;
@@ -138,6 +138,9 @@
         }
 
 
+
+
+        
             let listEnd=document.getElementById('listEnd');
             let options={
                 root:null,
@@ -145,13 +148,13 @@
                 threshold:[0]
             };
             let callback = ([entry])=>{
-                // let searchText=document.getElementById("searchText").value;
-                // if(entry && entry.isIntersecting && searchText){
-                //     search();
-                // }
-                // if (entry && entry.isIntersecting){
+                let searchText=document.getElementById("searchText").value;
+                if(entry && entry.isIntersecting && searchText){
+                    search();
+                }
+                if (entry && entry.isIntersecting){
                     getData();
-                // }
+                }
                 callNext = true;
             }
             let observer=new IntersectionObserver (callback,options);

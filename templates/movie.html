@@ -8,97 +8,133 @@
     <link rel="stylesheet" href="/layout/movie/layout.css">
 </head>
 <body onload="getMovie()">
-    <div class="pic">
+    <div class="top">
+        <div class="poster" id="poster"></div>
+        <div class="brief">
+            <div id="name_ZH" class="name"></div>
+            <div id="name_EN" class="name_EN"></div>
+        </div>
     </div>
-
-    <div class="brief">
-        <div id="name_ZH" class="name"></div>
-        <div id="name_EN" class="name"></div>
+    <div class="infos">
+        <div id="intro" class="getInfo" style="margin-top: 50px;"></div>
     </div>
-
 </body>
 
 <script type="text/javascript">
-    console.log(window.location.href.split('/m'));
-    let page = window.location.href.split('/m');
+    // let yahoo_id = "";
+    // let ambassador_id = "";
+    let showtime_id = "";
 
+    let page = window.location.href.split('/m');
     function getMovie(){
         url=page[0]+"/api/m"+page[1];
-        if (id[2]==null){
-                return "STOP";
-            }
         fetch(url, {method:"GET"})
         .then((response) => {
             return response.json(); 
         })
         .then((data) => {
-            let list=data.data;
-            let images=list.images;
-            let piclist=[];
+            console.log(data)
+            let movies=data.data;
+            let poster_url = movies.poster_url;
+            let data_id = movies.data_id;
+            let movie_name_ZH = movies.movie_name_ZH;
+            let movie_name_EN = movies.movie_name_EN;
 
-            for (let i in images){
-                let image=images[i];
-                piclist.push(image);
-            }
+            let poster = document.getElementById("poster");
+            let image = document.createElement('img');
+            poster.appendChild(image);
+            let objectURL = poster_url;
+            image.src = objectURL;   
 
-            console.log(pic);
-            for (let i in piclist){
-                let picFrame = document.getElementById("slides");
-                let eachPic = document.createElement("li");
-                eachPic.className="slides";
-                eachPic.id = i;
-                picFrame.appendChild(eachPic);
-                let Pic = document.createElement("img");
-                eachPic.appendChild(Pic);
-                let url = piclist[i];
-                Pic.src = url;
+            let name_ZH = document.getElementById("name_ZH");
+            let name_ZH_text = document.createTextNode(movie_name_ZH);
+            name_ZH.appendChild(name_ZH_text);
 
-   
-                let ol = document.getElementById("ol");
-                let divLi = document.createElement("div");
-                divLi.className="dot";
-                ol.appendChild(divLi);
-                let olinput = document.createElement("input");
-                olinput.setAttribute("type", "radio");
-                olinput.name = "dot";
-                olinput.id = "dot"+i;
-                divLi.appendChild(olinput);
-            }
-            let first = document.getElementById("dot0");
-            first.setAttribute("checked","true");
+            let name_EN = document.getElementById("name_EN");
+            let name_EN_text = document.createTextNode(movie_name_EN);
+            name_EN.appendChild(name_EN_text);
 
-            let showPic = document.getElementById(0);
-            showPic.style.cssText = "display:block";
-
-            let name=document.getElementById("name");
-            let nameText=document.createTextNode(list.name);
-            name.appendChild(nameText);
-
-            let description=document.getElementById("intro");
-            let descriptionText=document.createTextNode(list.description);
-            description.appendChild(descriptionText);
-
-            let address=document.getElementById("address");
-            let addressText=document.createTextNode(list.address);
-            address.appendChild(addressText);
-
-            let transport=document.getElementById("traffic");
-            let transportText=document.createTextNode(list.transport);
-            transport.appendChild(transportText);
-
-            let category=document.getElementById("what");
-            let categoryText=document.createTextNode(list.category);
-            category.appendChild(categoryText);
-
-            let at=document.createTextNode(" at ")
-            category.appendChild(at);
-
-            let mrtText=document.createTextNode(list.mrt);
-            category.appendChild(mrtText);
+            yahoo_id = movies.yahoo_id;
+            ambassador_id = movies.ambassador_id;
+            showtime_id = data.data.showtime_id;
+            console.log(showtime_id);
         })
         .catch((err) => {
             console.log('錯誤:', err);
         });
+        console.log(showtime_id);
+        getShowtime();
+
     }
-    </script>
+
+
+// 　  var Today=new Date();
+// 　  document.write("今天日期是 " + Today.getFullYear()+ " 年 " + (Today.getMonth()+1) + " 月 " + Today.getDate() + " 日");
+    function getYahoo(){
+        url = 'https://movies.yahoo.com.tw/ajax/pc/get_schedule_by_movie?movie_id=' + yahoo_id + '&date=2022-05-21&area_id=28'
+        fetch(url, {
+            headers : {
+            'authority': 'movies.yahoo.com.tw',
+            'scheme': 'https',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'accept-encoding': 'gzip, deflate, br',
+            'accept-language': 'zh-TW,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+            'cookie': 'rxx=28u37rf2vef.2mt2knqz&v=1; _ga=GA1.3.1331628063.1644762582; A1=d=AQABBNQVCWICEL4Q4DhAgFOc2L5Qve0kW1gFEgEBBgGdE2LqYr3Lb2UB_eMBAAcI1BUJYu0kW1g&S=AQAAAh-IwUDGWlV6di22ZqFdBBc; A3=d=AQABBNQVCWICEL4Q4DhAgFOc2L5Qve0kW1gFEgEBBgGdE2LqYr3Lb2UB_eMBAAcI1BUJYu0kW1g&S=AQAAAh-IwUDGWlV6di22ZqFdBBc; GUC=AQEBBgFiE51i6kIf4QSU; BX=5gmp4tlh0i5ek&b=3&s=ks; _ga=GA1.4.1331628063.1644762582; _gid=GA1.4.2130064037.1652007883; A1S=d=AQABBNQVCWICEL4Q4DhAgFOc2L5Qve0kW1gFEgEBBgGdE2LqYr3Lb2UB_eMBAAcI1BUJYu0kW1g&S=AQAAAh-IwUDGWlV6di22ZqFdBBc&j=WORLD; avi=eyJpdiI6IndsQTZKeXNwRVo4c0dUNU02RWlwQ0E9PSIsInZhbHVlIjoiVDdnWDJXRTN1SW9nRFpaUkJqTDVobVpxYnU1M0NwbDJDek9nTXVtVnNjV3UrN0MwTXBEZzgybGlLQ0Znb29HYiIsIm1hYyI6ImE1NDA2NDJiYzU5MTg1MzdkNDlkNDU1MDQxNjk2ZDFkYjJkYTM0ZjIyODdhMGNhNmNiNWMyZmQ2Nzc1YTI4ODAiLCJ0YWciOiIifQ%3D%3D; _gid=GA1.3.2130064037.1652007883; cmp=t=1652207866&j=0&u=1---; b_m2=eyJpdiI6IjdwbFMzL1dIbDM3bktKMGpjZWpJbVE9PSIsInZhbHVlIjoiNEF4T1RreHhGbFRrc2VHaENoWjA1RTdKbzZMTjNTYnVhaXlvSFVUbEdEWnpHT211TDRSZ0FZcGdibkthZ3VwcCtjNTRmNXIwWFI4QWIzQUpxZUFUZ3lTN241QUhldE9VYkNmdGdIT1IzWFBNT1BLN2dxQW1rTDh3dkovdEJpclQiLCJtYWMiOiJjYzRhOTBmYTYwN2U1ZjVmNjg4ZjkwNzNlNjJlZmVkMWQyMWFjMDRmMmNjZTA5OTI0ZGUxM2YyMDc5ZGFiNzdlIiwidGFnIjoiIn0%3D; XSRF-TOKEN=eyJpdiI6IjVYTXhyaGNaclNjbW5mN1RuQzB5SGc9PSIsInZhbHVlIjoiRUM0Tk9sWXJZZFJESytqZDBQTDBEUDBHc2M3c21ad2tJVlA3U2hyb2JoUmhock53dDNSOEZxd01nOW5MSnBzNDBtQ0dHYWZWUk5FUnp0dkR3MXB6dWJ6NGEzNHo5ZmN0M0txZWo0RmtvVTVMLzFrMmRKdUl6ZkwrbDUwL09PbjciLCJtYWMiOiI0ZGI1ZjcxYmU0MjAwNDcwNWQ5MGRlYmRhNjdmMmEwMGU1Y2ZjNDJhYWMwN2UzZDhmZDQwMjdhZjgwZjY4ZjU3IiwidGFnIjoiIn0%3D; ms55=eyJpdiI6IlltaDVTaVJSRHM3VC8xaTM0NG83L2c9PSIsInZhbHVlIjoiTEoyNUNRZlBxdnM0bENqZVZja29iNFFFYm5QTkgza1NaVXR5eEpZLzlDS21YSHRXRjMvYmVHZ2pSZmxNSXNmMWJQWmh6NnlXb0R4NERRYm02RWIyS0U3L2Jhci9TRkk3RlluM2d4TEJ1Z1p5UHRhNmRHd2UzT2NveFI1Y2Z3a0wiLCJtYWMiOiJkOWQ3ZDA0ODMxYWUzMTBjY2I0Mzk4MzA2NTk5M2UxNWQ2ZWFkNGMwMmVmNjZkYzYxOTA4Y2FjYTJmNzE0ODY2IiwidGFnIjoiIn0%3D',
+            'content-type':'application/json',
+            'user-agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Mobile Safari/537.36 Edg/101.0.1210.39',
+            },
+            method:"GET",
+            referer: 'https://movies.yahoo.com.tw/',
+})
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) =>{
+                console.log(data);
+                
+            })
+            .catch((err) => {
+                console.log('錯誤:', err);
+            });
+
+    }
+    
+    showtime_theater_id = [];
+
+    function getShowtime(){
+        url = 'https://capi.showtimes.com.tw/1/events/listForProgram/'+showtime_id+'?date=2022-05-21'
+        fetch(url, {method:"GET"})
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) =>{
+                let theaterslist = data.payload;
+                // console.log(data.payload.events);
+                // console.log(data.payload.venues);
+                for (let i in theaterslist.venues){
+                    if (theaterslist.venues[i].name =="台北今日秀泰影城")
+                    showtime_theater_id.push(theaterslist.venues[i].id);
+                }
+                // theaterslist[i].venueId
+                for (let i in theaterslist.events){
+                    if (theaterslist.events[i].venueId == 971){
+                    console.log(theaterslist.events[i]);
+                    console.log(theaterslist.events[i].startedAt);
+
+                    let play = document.getElementById('intro');
+                    let eachplay = document.createElement("div");
+                    eachplay.className = 'getInfo';
+                    let playtime = document.createTextNode('今日秀泰 '+ theaterslist.events[i].startedAt);
+                    eachplay.appendChild(playtime);
+                    play.append(eachplay);
+                    }
+                }
+            })
+            .catch((err) => {
+                console.log('錯誤:', err);
+            });
+    }
+
+</script>
+
 </html>

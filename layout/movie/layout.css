@@ -182,7 +182,7 @@ body{
 .top{
     display: flex;
     width: 1200px;
-    height: 400px;
+    /* height: 400px; */
     margin-top: 35px;
     margin-left: auto;
     margin-right: auto;
@@ -195,12 +195,11 @@ body{
     width: 600px;
     height: 400px;
 }
-.pic{
+.poster{
     position: relative;
     display: flex;
     flex: auto;
-    width: 540px;
-    height: 400px;
+    width: 280px;
     border-radius: 5px;
     
 }
@@ -234,10 +233,12 @@ li.slides{
     display: none;
 }
 img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    aspect-ratio: 16/9;
+    /* width: auto; */
+    /* height: 100%; */
+    margin: auto;
+    /* object-fit: cover;
+    justify-content: center;
+    align-items: center; */
 }
 ol{
     display: flex;
@@ -303,6 +304,17 @@ span.right{
     display: flex;
     align-items: center;
     color: #666666;
+    margin-top: 25px;
+}
+.name_EN{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    color: #666666;
+    margin-top: 25px;
 }
 .where{
     font-style: normal;
@@ -520,10 +532,10 @@ button.order{
         margin-left: 0;
         margin-right: 0;
     }
-    .pic{
+    .poster{
         flex: auto;
         margin-right: 0;
-        width: 100%;
+        width: 95%;
     }
     ul.slides{
         width: 100%;
