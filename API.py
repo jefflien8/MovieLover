@@ -19,7 +19,7 @@ CORS(apiBlueprint)
 #     database='movielover', 
 #     charset='utf8'
 # )
-pymysqlpool.logger.setLevel('DEBUG')
+# pymysqlpool.logger.setLevel('DEBUG')
 config={'host':'localhost', 'user':'root', 'password':'12345678', 'database':'movielover', 'autocommit':True}
 pool1 = pymysqlpool.ConnectionPool(size=2, maxsize=3, pre_create_num=2, name='pool1', **config)
 
