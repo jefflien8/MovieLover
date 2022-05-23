@@ -176,7 +176,7 @@ def movieScreening(movieId):
         return {"error": True,"message": "無此編號"}
 
     elif result!= None:    
-        sql = '''SELECT * FROM `yahooScreenings` WHERE `movie_name_ZH`=%s'''
+        sql = '''SELECT * FROM `yahooscreenings` WHERE `movie_name_ZH`=%s'''
         # con1 = pool1.get_connection()
         # with con1 as connection:
         #     with connection.cursor() as cursor:
