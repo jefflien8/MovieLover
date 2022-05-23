@@ -21,7 +21,7 @@ CORS(apiBlueprint)
 #     charset='utf8'
 # )
 # pymysqlpool.logger.setLevel('DEBUG')
-engine = create_engine('mysql+pymysql://root:123456@localhost/movielover', pool_size=20, max_overflow=0)
+engine = create_engine('mysql+pymysql://root:12345678@localhost/movielover', pool_size=20, max_overflow=0)
 
 # pool = Pool(
 #     host='localhost',
