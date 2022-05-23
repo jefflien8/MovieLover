@@ -5,8 +5,9 @@ from flask import *
 from flask_cors import CORS
 import pymysql
 from pymysql import NULL
-from sqlalchemy import false
-import pymysqlpool
+from sqlalchemy import create_engine
+# import pymysqlpool
+# from pymysqlpool import Pool
 import pymysql.cursors
 
 apiBlueprint=Blueprint("api",__name__)
@@ -20,8 +21,18 @@ CORS(apiBlueprint)
 #     charset='utf8'
 # )
 # pymysqlpool.logger.setLevel('DEBUG')
-config={'host':'localhost', 'user':'root', 'password':'12345678', 'database':'movielover', 'autocommit':True}
-pool1 = pymysqlpool.ConnectionPool(size=2, maxsize=3, pre_create_num=2, name='pool1', **config)
+engine = create_engine('mysql+pymysql://root:123456@localhost/movielover', pool_size=20, max_overflow=0)
+
+# pool = Pool(
+#     host='localhost',
+#     port=3306,
+#     user='root',
+#     passwd='123456',
+#     database='movielover', 
+#     charset='utf8' )
+# pool.init()
+# config={'host':'localhost', 'user':'root', 'password':'12345678', 'database':'movielover', 'autocommit':True}
+# pool1 = pymysqlpool.ConnectionPool(size=2, maxsize=3, pre_create_num=2, name='pool1', **config)
 
 
 @apiBlueprint.route("/api/movies")
@@ -31,15 +42,23 @@ def API():
     keyword=request.args.get("keyword", None,type=str)
     if keyword == None:
         sql='''SELECT * FROM `movies` ORDER BY `data_id` LIMIT %s,%s'''
-        con1 = pool1.get_connection()
-        with con1 as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(sql,(page*12,12))
-                result=cursor.fetchall()
-                cursor.execute(sql,((page+1)*12,12))
-                resultNext=cursor.fetchall()
-                cursor.close()
+
+        # con1 = pool.get_connection()
+        # with con1 as connection:
+        #     with connection.cursor() as cursor:
+        #         cursor.execute(sql,(page*12,12))
+        #         result=cursor.fetchall()
+        #         cursor.execute(sql,((page+1)*12,12))
+        #         resultNext=cursor.fetchall()
+        #         cursor.close()
+        con1=engine.connect()
+        rows =con1.execute(sql,(page*12,12))
+        result=rows.fetchall()
+        row2 =con1.execute(sql,((page+1)*12,12))
+        resultNext=row2.fetchall()
+        con1.close()
         resultNextLen=len(resultNext)
+        print(result)
         data=[]
         for i in result:
             data.append({
@@ -110,13 +129,17 @@ def API():
 @apiBlueprint.route("/api/movie/<movieId>")
 def movieAPI(movieId):
     sql = '''SELECT * FROM `movies` WHERE `data_id`=%s'''
-    con1 = pool1.get_connection()
-    with con1 as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(sql,(movieId))
-            result = cursor.fetchone()
-            cursor.close()
-    if result == None:
+    # con1 = pool.get_connection()
+    # with con1 as connection:
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(sql,(movieId))
+    #         result = cursor.fetchone()
+    #         cursor.close()
+    con1=engine.connect()
+    cursor =con1.execute(sql,(movieId))
+    result=cursor.fetchone()
+    print(result)
+    if result == []:
         return {"error": True,"message": "無此編號"}
     elif result!= None:
         Data={
@@ -138,31 +161,36 @@ def movieAPI(movieId):
 @apiBlueprint.route("/api/movieScreening/<movieId>")
 def movieScreening(movieId):
     sql = '''SELECT `movie_name_ZH` FROM `movies` WHERE `data_id`=%s'''
-    con1 = pool1.get_connection()
-    with con1 as connection:
-        with connection.cursor() as cursor:
-            cursor.execute(sql,(movieId))
-            result = cursor.fetchone()
-            cursor.close()
+    # con1 = pool.get_connection()
+    # with con1 as connection:
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(sql,(movieId))
+    #         result = cursor.fetchone()
+    #         cursor.close()
+    con1=engine.connect()
+    cursor =con1.execute(sql,(movieId))
+    result=cursor.fetchall()
     data=[]
     
-    if result == None:
+    if result == []:
         return {"error": True,"message": "無此編號"}
 
     elif result!= None:    
         sql = '''SELECT * FROM `yahooScreenings` WHERE `movie_name_ZH`=%s'''
-        con1 = pool1.get_connection()
-        with con1 as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(sql,(result))
-                Screening = cursor.fetchone()
-                Screenings = cursor.fetchall()
-                cursor.close()
-        
-
+        # con1 = pool1.get_connection()
+        # with con1 as connection:
+        #     with connection.cursor() as cursor:
+        #         cursor.execute(sql,(result))
+        #         Screening = cursor.fetchone()
+        #         Screenings = cursor.fetchall()
+        #         cursor.close()
+        con1=engine.connect()
+        cursor =con1.execute(sql,(result))
+        Screenings = cursor.fetchall()
+        Screening = cursor.fetchone()
         print(Screenings)
 
-        if Screening == None:
+        if Screenings == []:
             return {"error": True,"message": "查無場次"}
 
         for i in Screenings:
