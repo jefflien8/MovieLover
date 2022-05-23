@@ -295,7 +295,22 @@ span.right{
     cursor: pointer;
     z-index: 20;
 }
+.frame{
+    width: 80%;
+    margin: auto;
+}
+.screening{
+    margin-bottom: 10px;
+    width: 50%;
+    margin: auto;
 
+}
+.error{
+    width: 50%;
+    margin: auto;
+    font-size: large;
+    color: #ff4d00;
+}
 .name{
     font-style: normal;
     font-weight: 700;

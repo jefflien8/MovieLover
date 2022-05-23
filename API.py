@@ -1,55 +1,44 @@
 import datetime
+from h11 import Data
 import requests
 from flask import *
 from flask_cors import CORS
 import pymysql
 from pymysql import NULL
-# from dbutils.pooled_db import PooledDB, SharedDBConnection
-# import pymysql.cursors
+from sqlalchemy import false
+import pymysqlpool
+import pymysql.cursors
 
 apiBlueprint=Blueprint("api",__name__)
 CORS(apiBlueprint)
-db=pymysql.connect(
-    host='localhost',
-    port=3306,
-    user='root',
-    passwd='12345678',
-    database='movielover', 
-    charset='utf8'
-)
-# pool = PooledDB(
-#     creator=pymysql,
-#     maxconnections=6,
-#     mincached=2,
-#     maxcached=5,
-#     maxshared=3,
-#     blocking=True,
-#     maxusage=None,
-#     setsession=[],
-#     ping=0,
+# db=pymysql.connect(
 #     host='localhost',
 #     port=3306,
 #     user='root',
 #     passwd='123456',
-#     database='website', 
-#     charset='utf8',
-#     Cursor=pymysql.cursors.DictCursor
+#     database='movielover', 
+#     charset='utf8'
 # )
-# conn = pool.connection()
+pymysqlpool.logger.setLevel('DEBUG')
+config={'host':'localhost', 'user':'root', 'password':'12345678', 'database':'movielover', 'autocommit':True}
+pool1 = pymysqlpool.ConnectionPool(size=2, maxsize=3, pre_create_num=2, name='pool1', **config)
 
-cursor=db.cursor()
 
 @apiBlueprint.route("/api/movies")
 def API():
+
     page=request.args.get("page",0, type=int)
     keyword=request.args.get("keyword", None,type=str)
-    if keyword ==None:
-        sql='''SELECT * FROM `movies` ORDER BY `poster_url` LIMIT %s,%s'''
-        cursor.execute(sql,(page*12,12))
-        result=cursor.fetchall()
-        cursor.execute(sql,((page+1)*12,12))
-        resultNext=cursor.fetchall()
-        cursor.close
+    if keyword == None:
+        sql='''SELECT * FROM `movies` ORDER BY `data_id` LIMIT %s,%s'''
+        con1 = pool1.get_connection()
+        with con1 as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(sql,(page*12,12))
+                result=cursor.fetchall()
+                cursor.execute(sql,((page+1)*12,12))
+                resultNext=cursor.fetchall()
+                cursor.close()
         resultNextLen=len(resultNext)
         data=[]
         for i in result:
@@ -121,9 +110,12 @@ def API():
 @apiBlueprint.route("/api/movie/<movieId>")
 def movieAPI(movieId):
     sql = '''SELECT * FROM `movies` WHERE `data_id`=%s'''
-    cursor.execute(sql,(movieId))
-    result = cursor.fetchone()
-    cursor.close
+    con1 = pool1.get_connection()
+    with con1 as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(sql,(movieId))
+            result = cursor.fetchone()
+            cursor.close()
     if result == None:
         return {"error": True,"message": "無此編號"}
     elif result!= None:
@@ -140,5 +132,50 @@ def movieAPI(movieId):
             }
         }      
         return jsonify(Data)
+    else:
+        return {"error": True,"message": "伺服器錯誤，請稍後再試"}
+
+@apiBlueprint.route("/api/movieScreening/<movieId>")
+def movieScreening(movieId):
+    sql = '''SELECT `movie_name_ZH` FROM `movies` WHERE `data_id`=%s'''
+    con1 = pool1.get_connection()
+    with con1 as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(sql,(movieId))
+            result = cursor.fetchone()
+            cursor.close()
+    data=[]
+    
+    if result == None:
+        return {"error": True,"message": "無此編號"}
+
+    elif result!= None:    
+        sql = '''SELECT * FROM `yahooScreenings` WHERE `movie_name_ZH`=%s'''
+        con1 = pool1.get_connection()
+        with con1 as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(sql,(result))
+                Screening = cursor.fetchone()
+                Screenings = cursor.fetchall()
+                cursor.close()
+        
+
+        print(Screenings)
+
+        if Screening == None:
+            return {"error": True,"message": "查無場次"}
+
+        for i in Screenings:
+            data.append({
+                "data_id":i[0],
+                "movie_name_ZH":i[1],
+                "theater":i[2],
+                "date":i[3],
+                "time":i[4],
+                "type":i[5],
+            })     
+        datas={'data':data} 
+        return jsonify(datas)
+    
     else:
         return {"error": True,"message": "伺服器錯誤，請稍後再試"}

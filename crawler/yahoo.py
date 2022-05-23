@@ -3,8 +3,11 @@ import datetime
 from bs4 import BeautifulSoup
 from sqlalchemy import create_engine
 import pymysql
+import pandas as pd
+import re
 import Ambassador
 import ShowTime
+import YahooTheaters
 
 engine = create_engine('mysql+pymysql://root:123456@localhost/movielover')
 
@@ -51,8 +54,9 @@ def Intheaters(pageNum):
 
     for title in titles_ZH:
         if title.a !=None:
-            print(title.a.string)
-            yahoo_id.append(title.a["href"][-5:])
+            # print(title.a["href"].split('-')[1:-1])
+            yahoo_id.append(title.a["href"].split('-')[-1])
+            # print(title.a.string.replace('\n',''))
             movie_titles_ZH.append(title.a.string.replace('\n','').replace(' ',''))
 
     titles_EN = soup.find_all("div", attrs={'class':"en"})
@@ -95,7 +99,7 @@ def ThisWeekNew(pageNum):
     for title in titles_ZH:
         if title.a !=None:
             # print(title.a.string)
-            yahoo_id.append(title.a["href"][-5:])
+            yahoo_id.append(title.a["href"].split('-')[-1])
             movie_titles_ZH.append(title.a.string.replace('\n','').replace(' ',''))
 
     titles_EN = soup.find_all("div", attrs={'class':"en"})
@@ -173,13 +177,116 @@ def outcome():
                 conn.rollback()
                 print('IN error')
 
+# if __name__ == '__main__':
+#     Intheaters(pageNumber)
+#     ThisWeekNew(pageNumber)
+    # outcome()
+
+area_id = 28
+today = datetime.date.today()
+dayCheck = int(1)
+
+theater_list = []
+cate_list= []
+schedule_list = []
+date_list = []
+movieScreening_list = []
+
+def alldata():
+    for movie in yahoo_id:
+        print(movie)
+        yahooplay(movie)
+        
+    outcome2()
+
+def yahooplay(movie):
+    global today,dayCheck
+    print (dayCheck)
+    if dayCheck == 6:
+        today = datetime.date.today()
+        dayCheck = 1
+        print (dayCheck)
+        return
+    url = "https://movies.yahoo.com.tw/ajax/pc/get_schedule_by_movie"
+
+    payload = {'movie_id':movie,
+        'date':today,
+        'area_id':str(area_id),
+        'theater_id':'',
+        'datetime':'',
+        'movie_type_id':''}
+    print(today)
+    resp = requests.get(url, params=payload)
+    json_data = resp.json()
+
+    soup = BeautifulSoup(json_data['view'],'lxml')
+    
+    # nodata = soup.find_all("p", attrs={'class':'no_released'})
+
+
+
+    # print(html_elem) 
+    html_elem = soup.find_all("ul", attrs={'data-theater_name':re.compile(".*")})
+
+    #每個the就是一間戲院
+    for the in html_elem:
+        # print(the)
+        theater = the.find("li",attrs={"class":"adds"})
+        # print(theater)
+        print("電影院： {}".format(theater.find("a").text))
+    #info裡面分別包含每一間戲院的場次資訊
+        info = the.find_all(class_="gabtn")
+        # print(info)
+        for i in info:
+            # print(i)
+            print(i["data-movie_time"],i["data-movie_type"],today)
+            movieScreening_list.append(i["data-movie_title"])
+            # print(i["data-movie_title"])
+            theater_list.append(theater.find("a").text)
+            schedule_list.append(i["data-movie_time"])
+            cate_list.append(i["data-movie_type"])
+            date_list.append(today)
+
+        print("====================")    
+    
+    today = today + datetime.timedelta(days = 1) 
+    dayCheck = dayCheck+1
+    yahooplay(movie)
+
+def outcome2():
+
+    df = pd.DataFrame()
+
+    df["片名"] = movieScreening_list
+    df["戲院"] = theater_list
+    df["類型"] = cate_list
+    df["時刻"] = schedule_list
+    df["日期"] = date_list
+
+    print(df)
+    df.to_csv("./movie_schedule.csv",encoding="utf-8-sig")
+
+    df_yahooSrceenings = pd.DataFrame(
+        {   
+        'movie_name_ZH': movieScreening_list,
+        'theater': theater_list,
+        'date':date_list,
+        'time':schedule_list,
+        'type':cate_list
+        },
+        columns=['movie_name_ZH','theater','date','time','type']
+    )
+    print(df_yahooSrceenings)
+    df_yahooSrceenings.to_sql('yahooscreenings', con = engine, if_exists = 'append', index=False)
+
+
 if __name__ == '__main__':
     Intheaters(pageNumber)
     ThisWeekNew(pageNumber)
     outcome()
-
-Ambassador.AmbassadorData()
-ShowTime.showtimeData()
+    alldata()
+# Ambassador.AmbassadorData()
+# ShowTime.showtimeData()
 # rerunTime = "05:34"
 # print(rerunTime)
 # def job(t):
