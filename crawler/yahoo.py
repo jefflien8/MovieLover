@@ -9,7 +9,7 @@ import Ambassador
 import ShowTime
 import YahooTheaters
 
-engine = create_engine('mysql+pymysql://root:123456@localhost/movielover')
+engine = create_engine('mysql+pymysql://root:12345678@localhost/movielover')
 
 host='localhost'
 port=3306
