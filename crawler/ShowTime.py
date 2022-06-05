@@ -3,16 +3,16 @@ import time
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
+import pandas as pd
 from sqlalchemy import create_engine
 import pymysql
 
-engine = create_engine('mysql+pymysql://root:123456@localhost/movielover')
+engine = create_engine('mysql+pymysql://root:12345678@localhost/movielover')
 
 host='localhost'
 port=3306
 user='root'
-passwd='12345678'
+passwd='123456'
 database='movielover'
 
 conn=pymysql.connect(
@@ -102,37 +102,49 @@ def showtimeID():
 
 def outcome():
 
-    # df_Ambassador_movie = pd.DataFrame()
-    # df_Ambassador_movie["中文名"]=movie_titles_ZH
-    # df_Ambassador_movie["英文名"]=movie_titles_EN
-    # df_Ambassador_movie["上映日"]=release_date
-    # df_Ambassador_movie["ID"]=showtime_movie_id
+    df_Showtime_movie = pd.DataFrame()
+    df_Showtime_movie["中文名"]=movie_titles_ZH
+    df_Showtime_movie["英文名"]=movie_titles_EN
+    df_Showtime_movie["上映日"]=release_date
+    df_Showtime_movie["ID"]=showtime_id
 
-    # # 存到檔案做備用
-    # df_Ambassador_movie.to_csv("./ShowTime/ShowTime_movie_id.csv",encoding="utf-8-sig")
-    
+    # 存到檔案做備用
+    df_Showtime_movie.to_csv("./crawler/ShowTime_movie_id.csv",encoding="utf-8-sig")
+    print(df_Showtime_movie)
+    # df_Showtime = pd.DataFrame(
+    #     {   
+    #     'movie_name_ZH': movie_titles_ZH,
+    #     'movie_name_EN': movie_titles_EN,
+    #     'release_date':release_date,
+    #     'showtime_id':showtime_id,
+    #     },columns=['movie_name_ZH','movie_name_EN','release_date','showtime_id']
+    # )
+
+    # df_Showtime.to_sql('movies', con = engine, if_exists = 'append', index=True)
+
     for i in range (len(movie_titles_ZH)):
         sql = '''SELECT `movie_name_ZH` FROM `movies` WHERE `movie_name_ZH` = %s'''
         cursor.execute(sql,movie_titles_ZH[i])
         result = cursor.fetchone()
         print(result)
         if result != None:
-            sql = '''UPDATE `movies` SET `showtime_id`=%s, `release_date`=%s WHERE `movie_name_ZH` = %s '''
+            sql = '''UPDATE `movies` SET `showtime_id`=%s, `movie_name_EN`=%s WHERE `movie_name_ZH` = %s '''
             try:
-                cursor.execute(sql,(showtime_id[i],release_date[i],movie_titles_ZH[i]))
+                cursor.execute(sql,(showtime_id[i],movie_titles_EN[i],movie_titles_ZH[i]))
                 conn.commit()
             except:
                 conn.rollback()
                 print('UP error')
         else:
-            sql='''INSERT INTO `movies`(movie_name_ZH,movie_name_EN,showtime_id,release_date) 
-            VALUE(%s,%s,%s,%s)'''
-            try:
-                cursor.execute(sql,(movie_titles_ZH[i],movie_titles_EN[i],showtime_id[i],release_date[i]))
-                conn.commit()
-            except:
-                conn.rollback()
-                print('IN error')
+            continue
+            # sql='''INSERT INTO `movies`(movie_name_ZH,movie_name_EN,showtime_id,release_date) 
+            # VALUE(%s,%s,%s,%s)'''
+            # try:
+            #     cursor.execute(sql,(movie_titles_ZH[i],movie_titles_EN[i],showtime_id[i],release_date[i]))
+            #     conn.commit()
+            # except:
+            #     conn.rollback()
+            #     print('IN error')
 
 if __name__ == '__main__':
     showtimeData()

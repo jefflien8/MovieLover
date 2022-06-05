@@ -8,6 +8,24 @@
     <link rel="stylesheet" href="layout/index/layout.css">
 </head>
 <body>
+    <nav id="navbar">
+        <div class="logo">
+            <a href="/" style="text-decoration:none;color:white;">Movie Lover</a>
+        </div>
+        <div class="nav-items">
+            <a href="/" style="display:none" >收藏</a> 
+            <a style="text-decoration:none;color:white;" href="/login">登入</a>
+        </div>
+
+        <div class="searchbar">
+            <input type="text" placeholder="搜尋電影名稱" id="searchText">
+            <button onclick="search()" style="
+            background: #efee96;border-radius: 0px 5px 5px 0px;border-width: 0px;">
+            搜尋
+            </button>
+        </div>
+  
+    </nav>
 
     <div class="welcome">
         <div class="front">
@@ -16,18 +34,18 @@
                     <div style="font-weight: 700;
                     font-size: 28px;
                     line-height: 24px;">
-                    簡單查詢台北戲院場次
+                    馬上搜尋臺北電影場次！
                     </div>
                     <div style="font-weight: 400;
                     font-size: 16px;
                     line-height: 13px;
                     margin-top: 20px;">
-                    立即查找喜歡的電影場次吧！
+                    <!-- 馬上搜尋臺北電影場次！ -->
                     </div>
                 </div>
             </div>
 
-            <div class="search">
+            <!-- <div class="search">
                         
                 <input tpye="text" id="searchText" placeholder="輸入電影名稱查詢"
                     style="background:#FFFFFF;width: 400px;height: 46px;  padding: 0px;border-width: 0px;border-radius: 5px 0px 0px 5px;">
@@ -38,17 +56,16 @@
                     <img src="/layout/index/icon_search.png" class="icon" ></img>
                 </button>
                         
-            </div>
+            </div> -->
         </div>
 
-        <img class="weclomeImg"></img>
     </div>
     
     <div class=frame id=0 style="margin-top: 50px;"></div>
     <div id="nothing" style="text-align: center;"></div>
 
     <div class="bottom">
-        COPYRIGHT © 2021 台北一日遊
+        Movie Lover
     </div>
     <div id="listEnd"></div>
 
@@ -76,7 +93,7 @@
                         if (movies[movie].poster_url != null){
                             let poster_url =movies[movie].poster_url;
                             poster_urls.push(poster_url);
-                            let data_id =movies[movie].data_id;
+                            let data_id =movies[movie].index;
                             data_ids.push(data_id);
                             let movie_name_ZH =movies[movie].movie_name_ZH;
                             movies_name_ZH.push(movie_name_ZH);
@@ -100,18 +117,18 @@
                         let objectURL =poster_urls[i];
                         image.src = objectURL;        
 
-                        let word = document.createElement('div');
-                        word.style.cssText="font-weight: 700;font-size: 16px;line-height: 13px;margin-top: 15px;margin-left: 15px;margin-bottom:0px;"
+                        let word = document.createElement('p');
+                        word.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;font-weight: 700;font-size: 16px;line-height: 16px;margin-top: 15px;margin-left: 15px;margin-bottom:0px;"
                         newDiv.appendChild(word);  
                         let name_ZH = movies_name_ZH[i];
                         let ZHnameNode =document.createTextNode(name_ZH);
                         word.appendChild(ZHnameNode);
                         let flex=document.createElement('div');
-                        flex.style.cssText="display: flex;"
+                        flex.style.cssText="display: flex;width:250px"
                         word.appendChild(flex);
 
-                        let left = document.createElement('div');
-                        left.style.cssText="font-weight: 400;font-size: 16px;line-height: 13px;margin-top: 15px;margin-bottom: 15px;flex: auto;text-align:left;"
+                        let left = document.createElement('p');
+                        left.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;width: 250px;font-weight: 400;font-size: 16px;line-height: 20px;margin-top: 15px;margin-bottom: 15px;margin-right: 5px;flex: auto;text-align:left;"
                         flex.appendChild(left);
 
                         let name_EN = movies_name_EN[i];
@@ -137,28 +154,31 @@
             }
         }
 
-
-
-
         
-            let listEnd=document.getElementById('listEnd');
-            let options={
-                root:null,
-                rootMargin:"0px 0px 50px 0px",
-                threshold:[0]
-            };
-            let callback = ([entry])=>{
-                let searchText=document.getElementById("searchText").value;
-                if(entry && entry.isIntersecting && searchText){
-                    search();
-                }
-                if (entry && entry.isIntersecting){
-                    getData();
-                }
-                callNext = true;
+        let listEnd=document.getElementById('listEnd');
+        let options={
+            root:null,
+            rootMargin:"0px 0px 50px 0px",
+            threshold:[0]
+        };
+        let callback = ([entry])=>{
+            // let searchText=document.getElementById("searchText").value;
+            // if(entry && entry.isIntersecting && searchText){
+            //     search();
+            // }
+            if (entry && entry.isIntersecting){
+                getData();
             }
-            let observer=new IntersectionObserver (callback,options);
-            observer.observe(listEnd);
+            callNext = true;
+        }
+        let observer=new IntersectionObserver (callback,options);
+        observer.observe(listEnd);
+
+
+        function search(){
+            let searchText=document.getElementById("searchText").value;
+            window.location.href="/search?keyword="+searchText;
+        }
     </script>
 </body>
 </html>

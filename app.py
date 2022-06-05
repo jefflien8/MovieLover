@@ -13,13 +13,13 @@ app.config["TEMPLATES_AUTO_RELOAD"]=True
 def index():
 	return render_template("index.html")
 @app.route("/movie/<id>")
-def attraction(id):
+def movie(id):
 	return render_template("movie.html")
-# @app.route("/booking")
-# def booking():
-# 	return render_template("booking.html")
-# @app.route("/thankyou")
-# def thankyou():
-# 	return render_template("thankyou.html")
+@app.route("/search")
+def search():
+	return render_template("search.html")
+@app.route("/login")
+def login():
+	return render_template("login.html")
 
 app.run(host='0.0.0.0',port=3000)

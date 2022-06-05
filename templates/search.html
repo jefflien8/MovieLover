@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieLover</title>
+    <link rel="stylesheet" href="layout/search/layout.css">
+</head>
+<body onload="keyword()">
+    <nav id="navbar">
+        <div class="logo">
+            <a href="/" style="text-decoration:none;color:white;">Movie Lover</a>
+        </div>
+        <div class="nav-items">
+            <a href="/" style="display:none" >收藏</a> 
+            <a style="text-decoration:none;color:white;" href="/login">登入</a>
+        </div>
+
+        <div class="searchbar">
+            <input type="text" placeholder="搜尋電影名稱" id="searchText">
+            <button onclick="search()" style="
+            background: #efee96;border-radius: 0px 5px 5px 0px;border-width: 0px;">
+            搜尋
+            </button>
+        </div>
+  
+    </nav>
+
+    <div class="welcome">
+        <div class="front">
+            <div class="slogan">
+                <div>
+                    <div style="font-weight: 700;
+                    font-size: 28px;
+                    line-height: 24px;">
+                    馬上搜尋臺北電影場次！
+                    </div>
+                    <div style="font-weight: 400;
+                    font-size: 16px;
+                    line-height: 13px;
+                    margin-top: 20px;">
+                    <!-- 馬上搜尋臺北電影場次！ -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=frame id=0 style="margin-top: 50px;"></div>
+    <div id="nothing" style="text-align: center;"></div>
+
+    <div class="bottom">
+        Movie Lover
+    </div>
+    <div id="listEnd"></div>
+
+<script type="text/javascript">
+
+    let page =(window.location.href.split('search'))
+    function keyword(){
+        console.log(page);
+        url=page[0]+"api/movies"+page[1];
+        console.log(url);
+
+        fetch(url, {method:"GET"})
+        .then((response) => {
+            return response.json(); 
+        })
+        .then((data) => {
+            console.log(data);
+            if (data.data == null){
+                let movieList=document.getElementById('0');
+                let newDiv=document.createElement('p');
+                movieList.appendChild(newDiv);
+                let none =document.createTextNode("查無結果！");
+                newDiv.appendChild(none);
+            }
+            else{
+                let movies=data.data;
+                let poster_urls = [];
+                let data_ids = [];
+                let movies_name_ZH = [];
+                let movies_name_EN = [];
+                for (let movie in movies){
+                    if (movies[movie].poster_url != null){
+                        let poster_url =movies[movie].poster_url;
+                        poster_urls.push(poster_url);
+                        let data_id =movies[movie].index;
+                        data_ids.push(data_id);
+                        let movie_name_ZH =movies[movie].movie_name_ZH;
+                        movies_name_ZH.push(movie_name_ZH);
+                        let movie_name_EN =movies[movie].movie_name_EN;
+                        movies_name_EN.push(movie_name_EN)
+                    }
+                }
+                
+                for (i=0;i<poster_urls.length;i++){
+                    let spotList=document.getElementById('0');
+                    let newDiv=document.createElement('div');
+                    spotList.appendChild(newDiv);
+                    newDiv.className='pic';
+                    
+                    let url = document.createElement("a");
+                    url.setAttribute('href',page[0]+'movie/'+data_ids[i])
+                    newDiv.appendChild(url);
+
+                    let image = document.createElement('img');
+                    url.appendChild(image);
+                    let objectURL =poster_urls[i];
+                    image.src = objectURL;        
+
+                    let word = document.createElement('p');
+                    word.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;font-weight: 700;font-size: 16px;line-height: 16px;margin-top: 15px;margin-left: 15px;margin-bottom:0px;"
+                    newDiv.appendChild(word);  
+                    let name_ZH = movies_name_ZH[i];
+                    let ZHnameNode =document.createTextNode(name_ZH);
+                    word.appendChild(ZHnameNode);
+                    let flex=document.createElement('div');
+                    flex.style.cssText="display: flex;width:250px"
+                    word.appendChild(flex);
+
+                    let left = document.createElement('p');
+                    left.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;width: 250px;font-weight: 400;font-size: 16px;line-height: 20px;margin-top: 15px;margin-bottom: 15px;margin-right: 5px;flex: auto;text-align:left;"
+                    flex.appendChild(left);
+
+                    let name_EN = movies_name_EN[i];
+                    let ENnameNode = document.createTextNode(name_EN);
+                    left.appendChild(ENnameNode);
+        
+                }                 
+            }    
+        })
+    
+        .catch((err) => {
+            console.log('錯誤:', err);
+        });
+    
+    }
+
+    function search(){
+        let searchText=document.getElementById("searchText").value;
+        window.location.href="/search?keyword="+searchText;
+        }
+</script>
+</body>
+</html>

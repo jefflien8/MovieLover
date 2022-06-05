@@ -1,7 +1,9 @@
 import requests
 import datetime
+import schedule
+import time
 from bs4 import BeautifulSoup
-from sqlalchemy import create_engine
+from sqlalchemy import *
 import pymysql
 import pandas as pd
 import re
@@ -9,12 +11,12 @@ import Ambassador
 import ShowTime
 import YahooTheaters
 
-engine = create_engine('mysql+pymysql://root:12345678@localhost/movielover')
+engine = create_engine('mysql+pymysql://root:12345678@localhost/movielover',echo = True)
 
 host='localhost'
 port=3306
 user='root'
-passwd='12345678'
+passwd='123456'
 database='movielover'
 
 conn=pymysql.connect(
@@ -132,50 +134,69 @@ def ThisWeekNew(pageNum):
     ThisWeekNew(pageNum)
 
 def outcome():
-    # df_InTheaters_movie = pd.DataFrame()
-    # df_InTheaters_movie["中文名"]=movie_titles_ZH
-    # df_InTheaters_movie["英文名"]=movie_titles_EN
-    # # df_InTheaters_movie_id["簡介"]=movie_info
-    # df_InTheaters_movie["上映日"]=release_date
-    # df_InTheaters_movie["ID"]=yahoo_id
-    # df_InTheaters_movie["海報Url"]=yahoo_posterUrl
-    # #存到檔案做備用
-    # df_InTheaters_movie.to_csv("./Yahoo Movie/InTheaters_movie_id.csv",encoding="utf-8-sig")
+    df_InTheaters_movie = pd.DataFrame()
+    df_InTheaters_movie["中文名"]=movie_titles_ZH
+    df_InTheaters_movie["英文名"]=movie_titles_EN
+    # df_InTheaters_movie_id["簡介"]=movie_info
+    df_InTheaters_movie["上映日"]=release_date
+    df_InTheaters_movie["ID"]=yahoo_id
+    df_InTheaters_movie["海報Url"]=yahoo_posterUrl
+    #存到檔案做備用
+    df_InTheaters_movie.to_csv("./crawler/InTheaters_movie_id.csv",encoding="utf-8-sig")
 
-    # df_yahoo = pd.DataFrame(
-    #     {   
-    #     'movie_name_ZH': movie_titles_ZH,
-    #     'movie_name_EN': movie_titles_EN,
-    #     'release_date':release_date,
-    #     'yahoo_id':yahoo_id,
-    #     'poster_url':yahoo_posterUrl
-    #     },columns=['movie_name_ZH','movie_name_EN','release_date','yahoo_id','poster_url']
-    # )
-    # print(df_yahoo)
-    # df_yahoo.to_sql('movies', con = engine, if_exists = 'append', index=False)
+    meta = MetaData()
 
-    for i in range (len(movie_titles_ZH)):
-        sql = '''SELECT `movie_name_ZH` FROM `movies` WHERE `movie_name_ZH` = %s'''
-        cursor.execute(sql,movie_titles_ZH[i])
-        result = cursor.fetchone()
-        print(result)
-        if result != None:
-            sql = '''UPDATE `movies` SET `yahoo_id`=%s, `poster_url`=%s ,`release_date`=%s WHERE `movie_name_ZH` = %s '''
-            try:
-                cursor.execute(sql,(yahoo_id[i],yahoo_posterUrl[i],release_date[i],movie_titles_ZH[i]))
-                conn.commit()
-            except:
-                conn.rollback()
-                print('UP error')
-        else:
-            sql='''INSERT INTO `movies`(movie_name_ZH,movie_name_EN,yahoo_id,poster_url,release_date) 
-            VALUE(%s,%s,%s,%s,%s)'''
-            try:
-                cursor.execute(sql,(movie_titles_ZH[i],movie_titles_EN[i],yahoo_id[i],yahoo_posterUrl[i],release_date[i]))
-                conn.commit()
-            except:
-                conn.rollback()
-                print('IN error')
+    movies = Table('movies', meta, 
+        Column('index', Integer,autoincrement=True), 
+        Column('movie_name_ZH', String(255),primary_key = True,nullable=False), 
+        Column('movie_name_EN', String(255), nullable=False),
+        Column('yahoo_id', String(255),primary_key = True,),
+        Column('ambassador_id', String(255)),
+        Column('showtime_id', String(255)),
+        Column('poster_url', String(255)),
+        Column('release_date', Date),
+        Column('movie_info', String(5100))
+    )
+
+    meta.drop_all(engine, tables=None, checkfirst=True)
+    movies.create(engine, checkfirst=True)
+
+    df_yahoo = pd.DataFrame(
+        {   
+        'movie_name_ZH': movie_titles_ZH,
+        'movie_name_EN': movie_titles_EN,
+        'yahoo_id':yahoo_id,
+        'poster_url':yahoo_posterUrl,
+        'release_date':release_date,
+        'movie_info':movie_info
+        },columns=['movie_name_ZH','movie_name_EN','release_date','yahoo_id','poster_url','movie_info']
+    )
+    print(df_yahoo)
+
+    df_yahoo.to_sql('movies', con = engine, if_exists = 'append', index=True)
+
+    # for i in range (len(movie_titles_ZH)):
+    #     sql = '''SELECT `movie_name_ZH` FROM `movies` WHERE `movie_name_ZH` = %s'''
+    #     cursor.execute(sql,movie_titles_ZH[i])
+    #     result = cursor.fetchone()
+    #     print(result)
+    #     if result != None:
+    #         sql = '''UPDATE `movies` SET `yahoo_id`=%s, `poster_url`=%s ,`release_date`=%s WHERE `movie_name_ZH` = %s '''
+    #         try:
+    #             cursor.execute(sql,(yahoo_id[i],yahoo_posterUrl[i],release_date[i],movie_titles_ZH[i]))
+    #             conn.commit()
+    #         except:
+    #             conn.rollback()
+    #             print('UP error')
+    #     else:
+    #         sql='''INSERT INTO `movies`(movie_name_ZH,movie_name_EN,yahoo_id,poster_url,release_date) 
+    #         VALUE(%s,%s,%s,%s,%s)'''
+    #         try:
+    #             cursor.execute(sql,(movie_titles_ZH[i],movie_titles_EN[i],yahoo_id[i],yahoo_posterUrl[i],release_date[i]))
+    #             conn.commit()
+    #         except:
+    #             conn.rollback()
+    #             print('IN error')
 
 # if __name__ == '__main__':
 #     Intheaters(pageNumber)
@@ -191,6 +212,7 @@ cate_list= []
 schedule_list = []
 date_list = []
 movieScreening_list = []
+yahoo_screening = []
 
 def alldata():
     for movie in yahoo_id:
@@ -233,28 +255,31 @@ def yahooplay(movie):
         # print(the)
         theater = the.find("li",attrs={"class":"adds"})
         # print(theater)
-        print("電影院： {}".format(theater.find("a").text))
+        # print("電影院： {}".format(theater.find("a").text))
     #info裡面分別包含每一間戲院的場次資訊
         info = the.find_all(class_="gabtn")
         # print(info)
         for i in info:
             # print(i)
-            print(i["data-movie_time"],i["data-movie_type"],today)
+            # print(i["data-movie_time"],i["data-movie_type"],today)
             movieScreening_list.append(i["data-movie_title"])
             # print(i["data-movie_title"])
             theater_list.append(theater.find("a").text)
+            if i["data-movie_time"][0:2] == '00':
+                i["data-movie_time"] ='24:'+ i["data-movie_time"][-2:]
+                print(i["data-movie_time"])
             schedule_list.append(i["data-movie_time"])
             cate_list.append(i["data-movie_type"])
             date_list.append(today)
-
-        print("====================")    
+            yahoo_screening.append(movie)
+            
+        # print("====================")    
     
     today = today + datetime.timedelta(days = 1) 
     dayCheck = dayCheck+1
     yahooplay(movie)
 
 def outcome2():
-
     df = pd.DataFrame()
 
     df["片名"] = movieScreening_list
@@ -264,17 +289,33 @@ def outcome2():
     df["日期"] = date_list
 
     print(df)
-    df.to_csv("./movie_schedule.csv",encoding="utf-8-sig")
+    df.to_csv(".crawler/All_movie_schedule.csv",encoding="utf-8-sig")
+
+    meta = MetaData()
+
+    yahooscreenings = Table('yahooscreenings', meta, 
+        # Column('movie_name_ZH', String(255), primary_key = True), 
+        Column('yahoo_index', Integer,primary_key = True,autoincrement=True),
+        Column('yahoo_id', String(255), nullable=False),
+        Column('theater', String(255), nullable=False),
+        Column('date', String(255), nullable=False),
+        Column('time', String(255), nullable=False),
+        Column('type', String(255), nullable=False),
+    )
+
+    yahooscreenings.drop(engine, checkfirst=False)
+    yahooscreenings.create(engine, checkfirst=True)
 
     df_yahooSrceenings = pd.DataFrame(
         {   
-        'movie_name_ZH': movieScreening_list,
+        # 'movie_name_ZH': movieScreening_list,
+        'yahoo_id':yahoo_screening,
         'theater': theater_list,
         'date':date_list,
         'time':schedule_list,
         'type':cate_list
         },
-        columns=['movie_name_ZH','theater','date','time','type']
+        columns=['yahoo_id','theater','date','time','type']
     )
     print(df_yahooSrceenings)
     df_yahooSrceenings.to_sql('yahooscreenings', con = engine, if_exists = 'append', index=False)
@@ -284,21 +325,19 @@ if __name__ == '__main__':
     Intheaters(pageNumber)
     ThisWeekNew(pageNumber)
     outcome()
+    Ambassador.AmbassadorData()
+    # ShowTime.showtimeData()
     alldata()
-# Ambassador.AmbassadorData()
-# ShowTime.showtimeData()
-# rerunTime = "05:34"
-# print(rerunTime)
-# def job(t):
-#     print ("I'm working...", t)
-#     return
-# runtime = "05:44"
-# schedule.every().day.at(runtime).do(Intheaters,1)
+
+# runtime = "23:31"
+# schedule.every().day.at(runtime).do(Intheaters,pageNumber)
 # schedule.every().day.at(runtime).do(ThisWeekNew,pageNumber)
 # schedule.every().day.at(runtime).do(outcome)
-# schedule.every().day.at("05:35").do(Ambassador.AmbassadorData)
-# schedule.every().day.at("05:35").do(ShowTime.showtimeData)
+# schedule.every().day.at(runtime).do(Ambassador.AmbassadorData)
+# schedule.every().day.at(runtime).do(ShowTime.showtimeData)
+# schedule.every().day.at(runtime).do(alldata)
 
 # while True:
 #     schedule.run_pending()
 #     time.sleep(3)
+#     print('waiting...')

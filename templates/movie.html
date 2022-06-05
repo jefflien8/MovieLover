@@ -7,24 +7,108 @@
     <title>MovieLover 場次表</title>
     <link rel="stylesheet" href="/layout/movie/layout.css">
 </head>
-<body onload="getMovie()">
+<body onload="getMovie(),nowDate()">
+    <nav id="navbar">
+        <div class="logo">
+            <a href="/" style="text-decoration:none;color:white;">Movie Lover</a>
+        </div>
+        <div class="nav-items">
+            <a href="/" style="display:none" >收藏</a> 
+            <a style="text-decoration:none;color:white;" href="/login">登入</a>
+        </div>
+
+        <div class="searchbar">
+            <input type="text" placeholder="搜尋電影名稱" id="searchText">
+            <button onclick="search()" style="
+            background: #efee96;border-radius: 0px 5px 5px 0px;border-width: 0px;">
+            搜尋
+            </button>
+        </div>
+  
+    </nav>
+
     <div class="top">
         <div class="poster" id="poster"></div>
         <div class="brief">
             <div id="name_ZH" class="name"></div>
             <div id="name_EN" class="name_EN"></div>
+            <div>
+                <p class="info" id="info"></p>
+            </div>
         </div>
     </div>
-    <div class="infos">
+    <hr class="hr2"></hr>
+    <!-- <div class="infos">
         <div id="intro" class="getInfo" style="margin-top: 50px;"></div>
+    </div> -->
+    <select name="movie_date" class="movie_date" id="movie_date" onchange="dateScreening()">
+        <option id="today">選擇日期</option>
+            <option id="0" value="0"></option>
+            <option id="1" value="1"></option>
+            <option id="2" value="2"></option>
+            <option id="3" value="3"></option>
+            <option id="4" value="4"></option>
+    </select>
+
+    <select name="movie_order" class="movie_date" id="movie_order" onchange="orderScreening()">
+        <option id="order">依...排序</option>
+            <option id="yahoo_index" value="">電影院</option>
+            <option id="time" value="time">時間</option>
+    </select>
+
+    <div class=frame id=frame style="margin-top: 50px;"></div>
+
+    <div class="bottom">
+        Movie Lover
     </div>
-    
-    <div class=frame id=0 style="margin-top: 50px;"></div>
 
 </body>
 
 <script type="text/javascript">
-    // let yahoo_id = "";
+    let Today=new Date();
+    let dayloop= new Date();
+
+    let todayYear = Today.getFullYear();
+    let todayMonth = ''+(Today.getMonth()+1);
+    let todayDate = ''+(Today.getDate());
+    if (todayMonth.length < 2){
+        todayMonth = "0" + todayMonth;
+    }
+    if (todayDate.length < 2){
+        todayDate = "0" + todayDate;
+    }    
+
+    function nowDate(){
+
+        for (let i=0; i<5; i++){
+            
+            if (i==0){
+                dayloop.setDate(dayloop.getDate() - 1);
+              
+            }
+            dayloop.setDate(dayloop.getDate() + 1);
+            
+            let dayloopMonth = ''+(dayloop.getMonth()+1);
+            let dayloopDate = ''+dayloop.getDate();
+            if (dayloopMonth.length < 2){
+                dayloopMonth = "0" + dayloopMonth;
+            }
+            if (dayloopDate.length < 2){
+                dayloopDate = "0" + dayloopDate;
+            }    
+    
+            let nowday = document.getElementById(i);
+            nowday.value = (dayloopMonth)+'-'+(dayloopDate);
+            let nowdaytext = document.createTextNode
+            ((dayloopMonth)+'-'+(dayloopDate));
+            
+            nowday.appendChild(nowdaytext);
+        }
+        let today = document.getElementById('today');
+        let loopday1 = document.getElementById('0');
+        today.value = loopday1.value;
+    }
+
     // let ambassador_id = "";
     let showtime_id = "";
     let page =  (window.location.href.split('/'));
@@ -39,9 +123,10 @@
             console.log(data)
             let movies=data.data;
             let poster_url = movies.poster_url;
-            let data_id = movies.data_id;
+            let data_id = movies.index;
             let movie_name_ZH = movies.movie_name_ZH;
             let movie_name_EN = movies.movie_name_EN;
+            let movie_info = movies.movie_info;
 
             let poster = document.getElementById("poster");
             let image = document.createElement('img');
@@ -57,6 +142,10 @@
             let name_EN_text = document.createTextNode(movie_name_EN);
             name_EN.appendChild(name_EN_text);
 
+            let info = document.getElementById("info");
+            let info_text = document.createTextNode(movie_info);
+            info.appendChild(info_text);
+
             yahoo_id = movies.yahoo_id;
             ambassador_id = movies.ambassador_id;
             showtime_id = data.data.showtime_id;
@@ -68,10 +157,9 @@
         // console.log(showtime_id);
         getYahoo();
     }
-// 　  var Today=new Date();
-// 　  document.write("今天日期是 " + Today.getFullYear()+ " 年 " + (Today.getMonth()+1) + " 月 " + Today.getDate() + " 日");
+    
     function getYahoo(){
-        url=page[0]+'//'+page[2]+"/api/"+page[3]+'Screening'+'/'+page[4];
+        url=page[0]+'//'+page[2]+"/api/"+page[3]+'Screening/'+page[4]+'?date='+todayYear+'-'+todayMonth+'-'+todayDate;
         console.log(url);
         fetch(url, {method:"GET"})
         .then((response) => {
@@ -81,7 +169,7 @@
             console.log(data.data);
             console.log(data.error);
             if (data.error == true){
-                let data = document.getElementById('0');
+                let data = document.getElementById('frame');
                 let newDiv=document.createElement('div');
                 data.appendChild(newDiv);
                 newDiv.className = "error";
@@ -90,20 +178,39 @@
                 newDiv.appendChild(err);
             }
             else{
+                // let frame = document.getElementById('frame');
+                // let timeOrder = document.createElement('select');
+                // frame.appendChild(timeOrder);
+                // timeOrder.className ='movie_date';
+
+                // let order = document.createElement('option');
+                // let orderText = document.createTextNode('依...排序');
+                // order.appendChild(orderText);
+                // timeOrder.appendChild(order);
+
+                // let theater = document.createElement('option');
+                // let theaterText = document.createTextNode('電影院');
+                // theater.appendChild(theaterText);
+                // theater.id='theater';
+                // theater.value='yahoo_index';
+                // timeOrder.appendChild(theater);
+
+                // let time = document.createElement('option');
+                // let timeText = document.createTextNode('時間');
+                // time.appendChild(timeText);
+                // time.id='time';
+                // time.value='time';
+                // timeOrder.appendChild(time);
+
                 let screenings = data.data;
-                console.log(screenings);
-                console.log(screenings.movie_name_ZH);
                 let dates = [];
-                let movie_names = [];
                 let theaters = [];
                 let times = [];
                 let types = [];
                 for (let screening in screenings){
                     let date = screenings[screening].date;
-                    let MandD = date.split("2022-");
-                    dates.push(MandD[1]);
-                    // let movie_name = screenings[screening].movie_name;
-                    // movie_names.push(movie_name);
+                    let MonthDay = date.split("2022-");
+                    dates.push(MonthDay[1]);
                     let theater = screenings[screening].theater;
                     theaters.push(theater);
                     let time = screenings[screening].time;
@@ -114,10 +221,11 @@
 
                 for (i=0 ; i<theaters.length ; i++){
 
-                    let data=document.getElementById('0');
-                    let newDiv=document.createElement('div');
+                    let data=document.getElementById('frame');
+                    let newDiv=document.createElement('p');
                     data.appendChild(newDiv);
                     newDiv.className = "screening"
+
                     let date = dates[i];
                     let theater = theaters[i];
                     let time = times[i];
@@ -168,6 +276,162 @@
                 console.log('錯誤:', err);
             });
     }
+
+    function dateScreening(){
+        let dateScreening = document.getElementById("movie_date").value;
+        let order = document.getElementById("movie_order");
+        url=page[0]+'//'+page[2]+"/api/"+page[3]+'Screening'+'/'+page[4]+'?date='+todayYear+'-'+dateScreening;
+
+        if (dateScreening == '選擇日期'){
+            return
+        }
+        order.selectedIndex  = 0;
+        console.log(url);
+        fetch(url, {method:"GET"})
+        .then((response) => {
+            return response.json(); 
+        })
+        .then((data) => {
+            let element = document.getElementById('frame');
+            while (element.hasChildNodes()) {
+                element.removeChild(element.firstChild);
+            }
+            console.log(data.data);
+            console.log(data.error);
+            if (data.error == true){
+                let data = document.getElementById('frame');
+                let newDiv=document.createElement('div');
+                data.appendChild(newDiv);
+                newDiv.className = "error";
+                
+                let err = document.createTextNode("查無場次！");
+                newDiv.appendChild(err);
+            }
+            else{
+                let element = document.getElementById('frame');
+                while (element.hasChildNodes()) {
+                    element.removeChild(element.firstChild);
+                }
+
+                let screenings = data.data;
+                let dates = [];
+                let theaters = [];
+                let times = [];
+                let types = [];
+                for (let screening in screenings){
+                    let date = screenings[screening].date;
+                    let MonthDay = date.split("2022-");
+                    dates.push(MonthDay[1]);
+                    let theater = screenings[screening].theater;
+                    theaters.push(theater);
+                    let time = screenings[screening].time;
+                    times.push(time);
+                    let type = screenings[screening].type;
+                    types.push(type);
+                }
+
+                for (i=0 ; i<theaters.length ; i++){
+
+
+                    let data=document.getElementById('frame');
+                    let newDiv=document.createElement('p');
+                    data.appendChild(newDiv);
+                    newDiv.className = "screening"
+                    let date = dates[i];
+                    let theater = theaters[i];
+                    let time = times[i];
+                    let type = types[i];
+
+                    let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type);
+                    newDiv.appendChild(dateText);
+                }
+            }
+        })
+        .catch((err) => {
+            console.log('錯誤:', err);
+        });
+
+    }
+
+    function orderScreening(){
+        let date = document.getElementById("movie_date").value;
+        let order = document.getElementById("movie_order").value;
+        console.log(order)
+        url=page[0]+'//'+page[2]+"/api/"+page[3]+'Screening'+'/'+page[4]+'?date='+todayYear+'-'+date+'&time='+order;
+
+        if (dateScreening == '依...排序'){
+            return
+        }
+        console.log(url);
+        fetch(url, {method:"GET"})
+        .then((response) => {
+            return response.json(); 
+        })
+        .then((data) => {
+            let element = document.getElementById('frame');
+            while (element.hasChildNodes()) {
+                element.removeChild(element.firstChild);
+            }
+            console.log(data.data);
+            console.log(data.error);
+            if (data.error == true){
+                let data = document.getElementById('frame');
+                let newDiv=document.createElement('div');
+                data.appendChild(newDiv);
+                newDiv.className = "error";
+                
+                let err = document.createTextNode("查無場次！");
+                newDiv.appendChild(err);
+            }
+            else{
+                let element = document.getElementById('frame');
+                while (element.hasChildNodes()) {
+                    element.removeChild(element.firstChild);
+                }
+
+                let screenings = data.data;
+                let dates = [];
+                let theaters = [];
+                let times = [];
+                let types = [];
+                for (let screening in screenings){
+                    let date = screenings[screening].date;
+                    let MonthDay = date.split("2022-");
+                    dates.push(MonthDay[1]);
+                    let theater = screenings[screening].theater;
+                    theaters.push(theater);
+                    let time = screenings[screening].time;
+                    times.push(time);
+                    let type = screenings[screening].type;
+                    types.push(type);
+                }
+
+                for (i=0 ; i<theaters.length ; i++){
+
+
+                    let data=document.getElementById('frame');
+                    let newDiv=document.createElement('p');
+                    data.appendChild(newDiv);
+                    newDiv.className = "screening"
+                    let date = dates[i];
+                    let theater = theaters[i];
+                    let time = times[i];
+                    let type = types[i];
+
+                    let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type);
+                    newDiv.appendChild(dateText);
+                }
+            }
+                })
+                .catch((err) => {
+                    console.log('錯誤:', err);
+                });
+    }
+
+    function search(){
+            let searchText=document.getElementById("searchText").value;
+            window.location.href="/search?keyword="+searchText;
+        }
 
 </script>
 
