@@ -1,7 +1,7 @@
 import requests
 import datetime
-import schedule
-import time
+# import schedule
+# import time
 from bs4 import BeautifulSoup
 from sqlalchemy import *
 import pymysql
