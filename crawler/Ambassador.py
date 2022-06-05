@@ -57,15 +57,15 @@ def AmbassadorData():
     outcome()
 
 def outcome():
-    df_Ambassador_movie = pd.DataFrame()
-    df_Ambassador_movie["中文名"]=movie_titles_ZH
-    df_Ambassador_movie["英文名"]=movie_titles_EN
-    df_Ambassador_movie["上映日"]=release_date
-    df_Ambassador_movie["ID"]=ambassador_id
-    df_Ambassador_movie["海報Url"]=ambassador_posterUrl
+    # df_Ambassador_movie = pd.DataFrame()
+    # df_Ambassador_movie["中文名"]=movie_titles_ZH
+    # df_Ambassador_movie["英文名"]=movie_titles_EN
+    # df_Ambassador_movie["上映日"]=release_date
+    # df_Ambassador_movie["ID"]=ambassador_id
+    # df_Ambassador_movie["海報Url"]=ambassador_posterUrl
 
-    #存到檔案做備用
-    df_Ambassador_movie.to_csv("./crawler/ambassador_movie_id.csv",encoding="utf-8-sig")
+    # #存到檔案做備用
+    # df_Ambassador_movie.to_csv("./crawler/ambassador_movie_id.csv",encoding="utf-8-sig")
 
     # df_Ambassador = pd.DataFrame(
     #     {   

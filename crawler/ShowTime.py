@@ -102,15 +102,15 @@ def showtimeID():
 
 def outcome():
 
-    df_Showtime_movie = pd.DataFrame()
-    df_Showtime_movie["中文名"]=movie_titles_ZH
-    df_Showtime_movie["英文名"]=movie_titles_EN
-    df_Showtime_movie["上映日"]=release_date
-    df_Showtime_movie["ID"]=showtime_id
+    # df_Showtime_movie = pd.DataFrame()
+    # df_Showtime_movie["中文名"]=movie_titles_ZH
+    # df_Showtime_movie["英文名"]=movie_titles_EN
+    # df_Showtime_movie["上映日"]=release_date
+    # df_Showtime_movie["ID"]=showtime_id
 
-    # 存到檔案做備用
-    df_Showtime_movie.to_csv("./crawler/ShowTime_movie_id.csv",encoding="utf-8-sig")
-    print(df_Showtime_movie)
+    # # 存到檔案做備用
+    # df_Showtime_movie.to_csv("./crawler/ShowTime_movie_id.csv",encoding="utf-8-sig")
+    # print(df_Showtime_movie)
     # df_Showtime = pd.DataFrame(
     #     {   
     #     'movie_name_ZH': movie_titles_ZH,

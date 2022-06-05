@@ -134,15 +134,15 @@ def ThisWeekNew(pageNum):
     ThisWeekNew(pageNum)
 
 def outcome():
-    df_InTheaters_movie = pd.DataFrame()
-    df_InTheaters_movie["中文名"]=movie_titles_ZH
-    df_InTheaters_movie["英文名"]=movie_titles_EN
-    # df_InTheaters_movie_id["簡介"]=movie_info
-    df_InTheaters_movie["上映日"]=release_date
-    df_InTheaters_movie["ID"]=yahoo_id
-    df_InTheaters_movie["海報Url"]=yahoo_posterUrl
-    #存到檔案做備用
-    df_InTheaters_movie.to_csv("./crawler/InTheaters_movie_id.csv",encoding="utf-8-sig")
+    # df_InTheaters_movie = pd.DataFrame()
+    # df_InTheaters_movie["中文名"]=movie_titles_ZH
+    # df_InTheaters_movie["英文名"]=movie_titles_EN
+    # # df_InTheaters_movie_id["簡介"]=movie_info
+    # df_InTheaters_movie["上映日"]=release_date
+    # df_InTheaters_movie["ID"]=yahoo_id
+    # df_InTheaters_movie["海報Url"]=yahoo_posterUrl
+    # #存到檔案做備用
+    # df_InTheaters_movie.to_csv("./crawler/InTheaters_movie_id.csv",encoding="utf-8-sig")
 
     meta = MetaData()
 
@@ -280,16 +280,16 @@ def yahooplay(movie):
     yahooplay(movie)
 
 def outcome2():
-    df = pd.DataFrame()
+    # df = pd.DataFrame()
 
-    df["片名"] = movieScreening_list
-    df["戲院"] = theater_list
-    df["類型"] = cate_list
-    df["時刻"] = schedule_list
-    df["日期"] = date_list
+    # df["片名"] = movieScreening_list
+    # df["戲院"] = theater_list
+    # df["類型"] = cate_list
+    # df["時刻"] = schedule_list
+    # df["日期"] = date_list
 
-    print(df)
-    df.to_csv(".crawler/All_movie_schedule.csv",encoding="utf-8-sig")
+    # print(df)
+    # df.to_csv(".crawler/All_movie_schedule.csv",encoding="utf-8-sig")
 
     meta = MetaData()
 
