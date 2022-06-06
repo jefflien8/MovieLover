@@ -329,7 +329,7 @@ if __name__ == '__main__':
     # ShowTime.showtimeData()
     alldata()
 
-# runtime = "23:31"
+# runtime = "01:00"
 # schedule.every().day.at(runtime).do(Intheaters,pageNumber)
 # schedule.every().day.at(runtime).do(ThisWeekNew,pageNumber)
 # schedule.every().day.at(runtime).do(outcome)

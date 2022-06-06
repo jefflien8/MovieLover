@@ -21,5 +21,8 @@ def search():
 @app.route("/login")
 def login():
 	return render_template("login.html")
+@app.route("/favorite")
+def favorite():
+	return render_template("favorite.html")
 
 app.run(host='0.0.0.0',port=3000)

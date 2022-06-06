@@ -65,7 +65,16 @@ nav .logo {
     /* background-color: rgb(0,0,0);
     background-color: rgba(0,0,0,0.4); */
 }
-
+.switch{
+    color: #FFFFFF;
+    margin-top: 15px;
+    text-align: center;
+}
+.messageText{
+    color:red;
+    text-align: center;
+    margin-top: 5px;
+}
 .mpdalHeader{
     position: relative;
     top: 0px;

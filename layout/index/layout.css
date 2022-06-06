@@ -5,137 +5,13 @@ body{
     margin:0px;
     padding:0px
 }
-.modal{
-    display: none;
-    position: absolute; 
-    z-index: 100;
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%;
-    overflow: auto; 
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
-}
-.mpdalHeader{
-    position: relative;
-    top: 0px;
-    padding: 5px ;
-    background: linear-gradient(270deg, #337788 0%, #66AABB 100%);
-    border-radius: 5px 5px 0px 0px;
-}
-.modalContent{
-    background-color: #FFFFFF;
-    margin: auto;
-    margin-top: 70px;
-    border-radius: 6px;
-    box-shadow: 0px 4px 60px #AAAAAA;
-    width: 340px;
-    height: 310px;
-    text-align: center;
-}
 
-.modalContent2{
-    background-color: #FFFFFF;
-    margin: auto;
-    margin-top: 70px;
-    border-radius: 6px;
-    box-shadow: 0px 4px 60px #AAAAAA;
-    width: 340px;
-    height: 380px;
-
-    text-align: center;
-}
-#closeSignin{    
-    position: relative;
-    right: 20px;
-    top: 6px;
-    width: 16px;
-    height: 16px;
-    float: right;
-}
-
-.formTitle{
-    font-style: normal;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 24px;
-    color: #666666;
-    margin-top: 5px;
-}
-.formChange{
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 13px;
-
-    color: #666666;
-}
-.modalContent ::placeholder{
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 13px;
-    display: flex;
-    align-items: center;
-    color: #666666;
-}
-.modalContent input[type=submit] {
-    background: #448899;
-    width: 90%;
-    height: 50px;
-    border-radius:5px; 
-    border-width: 0px;
-    cursor:pointer;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 19px;
-    line-height: 16px;
-    color: #FFFFFF;
-}
-.modalContent2 ::placeholder{
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 13px;
-    display: flex;
-    align-items: center;
-    color: #666666;
-}
-.modalContent2 input[type=submit] {
-    background: #448899;
-    width: 90%;
-    height: 50px;
-    border-radius:5px; 
-    border-width: 0px;
-    cursor:pointer;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 19px;
-    line-height: 16px;
-    color: #FFFFFF;
-}
-.messageText{
-    color:red;
-}
 .front{
     position:absolute;
     top:25%;
     left:19%;
     z-index: 3;
 }
-/* .navbar{
-    overflow: hidden;
-    display: flex;
-    margin-right: 3px;
-    background: #FFFFFF;
-    width: 100%;
-    height: 54px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    align-items: center;
-    justify-content: center;
-} */
 
 .header{
     display: flex;
@@ -187,8 +63,9 @@ body{
 }
 .click{
     cursor: pointer;
-    color: #666666;
-    text-decoration: none
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
 }
 .welcome{
     display: flex;
@@ -199,6 +76,7 @@ body{
     position: relative;
     height: 400px;
     width: 100%;
+    padding-top: 50px;
     background-image:url(blade-runner-2049.jpg);
 
     background-repeat: no-repeat;
@@ -212,20 +90,7 @@ body{
     align-items: flex-start;
     color: #f8f8f8;
 }
-/* .icon{
-    border:2px #448899 solid;
-    background-repeat:no-repeat;
-    width: 30px;
-    height: 30px;
-    align-items: center;
-    justify-content: center;
-} */
-/* .weclomeImg{
-    background-image:url(blade-runner-2049.jpg);
-    background-repeat:no-repeat;
-    object-fit: none;
-    aspect-ratio: 1/1;
-} */
+
 .bottom{
     display: flex;
     flex-direction: column;
@@ -317,10 +182,12 @@ nav .logo {
 
 /* Styling all the nav items as a whole */
 nav .nav-items {
+    display: flex;
     flex: auto;
     text-align: right;
     padding: 0 0 0 200px;
     margin-right: 30px;
+    justify-content: flex-end;
 }
 
 /* Styling the list items in the nav tag */

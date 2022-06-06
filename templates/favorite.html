@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieLover</title>
+    <link rel="stylesheet" href="layout/search/layout.css">
+</head>
+<body onload="checkAPI(),getFavorite()">
+    <nav id="navbar">
+        <div class="logo">
+            <a href="/" style="text-decoration:none;color:white;">Movie Lover</a>
+        </div>
+        <div class="nav-items">
+            <a id="favorite" href="/favorite" class="click" style="display: none;">收藏</a> 
+            <a id="textSignout" onclick="signoutAPI()" class="click" href="/" style="display: none;">登出</a>
+            <a id="textSignin" class="click" href="/login">登入</a>
+        </div>
+
+        <div class="searchbar">
+            <input type="text" placeholder="搜尋電影名稱" id="searchText">
+            <button onclick="search()" style="
+            background: #efee96;border-radius: 0px 5px 5px 0px;border-width: 0px;">
+            搜尋
+            </button>
+        </div>
+  
+    </nav>
+
+    <div class="welcome">
+        <div class="front">
+            <div class="slogan">
+                <div>
+                    <div style="font-weight: 700;
+                    font-size: 28px;
+                    line-height: 24px;">
+                    馬上搜尋臺北電影場次！
+                    </div>
+                    <div style="font-weight: 400;
+                    font-size: 16px;
+                    line-height: 13px;
+                    margin-top: 20px;">
+                    <!-- 馬上搜尋臺北電影場次！ -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="text-align: center;margin-top: 20px;">您的收藏：</div>
+    <div class=frame id=0 style="margin-top: 50px;"></div>
+    <div id="nothing" style="text-align: center;"></div>
+
+    <div class="bottom">
+        Movie Lover
+    </div>
+    <div id="listEnd"></div>
+
+<script type="text/javascript">
+    let page = window.location.href.split('favorite');
+    console.log(page)
+    function getFavorite(){
+        url="/api/favorite"
+        fetch(url, {method: 'GET'})
+        .then((response) => {
+            return response.json(); 
+        })
+        .then((data) => {
+            let movies=data.data;
+            let poster_urls = [];
+            let data_ids = [];
+            let movies_name_ZH = [];
+            let movies_name_EN = [];
+            let fav_indexs = [];
+            for (let movie in movies){
+                if (movies[movie].poster_url != null){
+                    let poster_url =movies[movie].poster_url;
+                    poster_urls.push(poster_url);
+                    let data_id =movies[movie].index;
+                    data_ids.push(data_id);
+                    let movie_name_ZH =movies[movie].movie_name_ZH;
+                    movies_name_ZH.push(movie_name_ZH);
+                    let movie_name_EN =movies[movie].movie_name_EN;
+                    movies_name_EN.push(movie_name_EN)
+                    let fav_index = movies[movie].fav_index;
+                    fav_indexs.push(fav_index);
+                }
+
+            }
+            
+            for (i=0;i<poster_urls.length;i++){
+                if (data_ids[i] == null){
+                    let spotList=document.getElementById('0');
+                    let newDiv=document.createElement('div');
+                    spotList.appendChild(newDiv);
+                    newDiv.className='pic';
+                    
+                    let url = document.createElement("a");
+                    newDiv.appendChild(url);
+
+                    let image = document.createElement('img');
+                    url.appendChild(image);
+                    let objectURL =poster_urls[i];
+                    image.src = objectURL;        
+
+                    let word = document.createElement('p');
+                    word.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;font-weight: 700;font-size: 16px;line-height: 16px;margin-top: 15px;margin-left: 15px;margin-bottom:0px;"
+                    newDiv.appendChild(word);  
+                    let name_ZH = movies_name_ZH[i];
+                    let ZHnameNode =document.createTextNode(name_ZH+' (目前無放映)');
+                    word.appendChild(ZHnameNode);
+
+                    let flex=document.createElement('div');
+                    flex.style.cssText="display: flex;width:250px"
+                    word.appendChild(flex);
+
+                    let left = document.createElement('p');
+                    left.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;width: 250px;font-weight: 400;font-size: 16px;line-height: 20px;margin-top: 15px;margin-bottom: 15px;margin-right: 5px;flex: auto;text-align:left;"
+                    flex.appendChild(left);
+
+                    let name_EN = movies_name_EN[i];
+                    let ENnameNode = document.createTextNode(name_EN);
+                    left.appendChild(ENnameNode);
+
+                    let delBTN = document.createElement('button');
+                    delBTN.value = fav_indexs[i];
+                    delBTN.id = fav_indexs[i];
+                    delBTN.onclick = function(){DelFavorite(delBTN.id)};
+                    let del = document.createTextNode('刪除');
+                    delBTN.appendChild(del);
+                    flex.appendChild(delBTN);
+                }
+                else{
+                let spotList=document.getElementById('0');
+                let newDiv=document.createElement('div');
+                spotList.appendChild(newDiv);
+                newDiv.className='pic';
+                
+                let url = document.createElement("a");
+                url.setAttribute('href',page[0]+'movie/'+data_ids[i])
+                newDiv.appendChild(url);
+
+                let image = document.createElement('img');
+                url.appendChild(image);
+                let objectURL =poster_urls[i];
+                image.src = objectURL;        
+
+                let word = document.createElement('p');
+                word.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;font-weight: 700;font-size: 16px;line-height: 16px;margin-top: 15px;margin-left: 15px;margin-bottom:0px;"
+                newDiv.appendChild(word);  
+                let name_ZH = movies_name_ZH[i];
+                let ZHnameNode =document.createTextNode(name_ZH);
+                word.appendChild(ZHnameNode);
+                let flex=document.createElement('div');
+                flex.style.cssText="display: flex;width:250px"
+                word.appendChild(flex);
+
+                let left = document.createElement('p');
+                left.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;width: 250px;font-weight: 400;font-size: 16px;line-height: 20px;margin-top: 15px;margin-bottom: 15px;margin-right: 5px;flex: auto;text-align:left;"
+                flex.appendChild(left);
+
+                let name_EN = movies_name_EN[i];
+                let ENnameNode = document.createTextNode(name_EN);
+                left.appendChild(ENnameNode);
+
+                let delBTN = document.createElement('button');
+                delBTN.value = fav_indexs[i];
+                delBTN.id = fav_indexs[i];
+                delBTN.onclick = function(){DelFavorite(delBTN.id)};
+                let del = document.createTextNode('刪除');
+                delBTN.appendChild(del);
+                flex.appendChild(delBTN);
+                }
+            }                
+
+        })
+        .catch((err) => {
+            console.log('錯誤:', err);
+        });
+        
+    }
+
+    function DelFavorite(id){
+        let fav_index = document.getElementById(id).value;
+        console.log(fav_index);
+        url = '/api/favorite';
+        fetch(url, {
+                body:JSON.stringify({
+                    "fav_index":fav_index,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                 method: 'DELETE'})
+        .then((response) => {
+            console.log(response);
+            return response.json(); 
+        })
+        .then((jsonData) => {
+            if(jsonData.ok == true){
+                alert("已刪除");
+            }
+            else{
+                alert("刪除失敗");
+            }
+        })
+        .catch((err) => {
+            console.log('錯誤:', err);
+        });
+    }
+
+    function search(){
+        let searchText=document.getElementById("searchText").value;
+        window.location.href="/search?keyword="+searchText;
+        }
+
+    function checkAPI(){
+        url="/api/member"
+        fetch(url, {method: 'GET'})
+        .then((response) => {
+            console.log(response);
+            return response.json(); 
+        })
+        .then((jsonData) => {
+            if(jsonData.data == null){
+                window.location.href="/";
+            }
+            else{
+                textSignin.style.display = "none";
+                textSignout.style.display = "block";
+                favorite.style.display = 'block';
+            }
+        })
+        .catch((err) => {
+            console.log('錯誤:', err);
+        });
+    }
+    
+    function signoutAPI(){
+        url="/api/member"
+        fetch(url, {method: 'DELETE'})
+        .then(() => {
+            window.location.href="/";
+        })
+        .catch((err) => {
+            console.log('錯誤:', err);
+        });
+    }
+
+</script>
+</body>
+</html>
