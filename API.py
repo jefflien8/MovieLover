@@ -11,16 +11,9 @@ import pymysql.cursors
 
 apiBlueprint=Blueprint("api",__name__)
 CORS(apiBlueprint)
-# db=pymysql.connect(
-#     host='localhost',
-#     port=3306,
-#     user='root',
-#     passwd='123456',
-#     database='movielover', 
-#     charset='utf8'
-# )
-# pymysqlpool.logger.setLevel('DEBUG')
-engine = create_engine('mysql+pymysql://root:12345678@localhost/movielover', pool_size=20, max_overflow=0)
+
+engine = create_engine(
+    'mysql+pymysql://admin:password@/movielover', pool_size=20, max_overflow=0)
 
 # pool = Pool(
 #     host='localhost',

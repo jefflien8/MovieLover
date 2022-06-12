@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="google-signin-client_id" content="228222878387-7507oej745t31for58nm1mptiigmhbu1.apps.googleusercontent.com"> -->
     <title>Movielover</title>
     <link rel="stylesheet" href="layout/login/layout.css">
 </head>
@@ -15,7 +16,7 @@
     </nav>
 
     <div class="background"></div>
-
+        <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
     <div class="form" id="login">
         <div class="title">登入</div>
         <div class="subtitle"></div>
@@ -58,8 +59,9 @@
         <div id="signupErrorText" class="messageText"></div>
     
         <div onclick="login()" class="switch">已有帳號？請點此登入</div>
-        <input  onclick="signupAPI()" type="submit" class="submit" value="註冊">
+        <input  onclick="signupAPI()" type="submit" class="submit" value="註冊">    
     </div>
+
 
     <div class="bottom">
         Movie Lover
@@ -182,4 +184,26 @@
         });
     }
 </script>
+<!-- <script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+<script>
+  function onSignIn(googleUser) {
+    var id_token = googleUser.getAuthResponse().id_token;
+    var profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    $.ajax({
+      type: "POST",
+      url: '/google_sign_in',
+      data: JSON.stringify({'id_token': id_token}),
+      success: function() {
+        console.log('login success')
+      },
+      dataType: 'json',
+      contentType:"application/json",
+    });
+  }
+</script> -->
 </html>

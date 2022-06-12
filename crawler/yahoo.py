@@ -7,16 +7,16 @@ from sqlalchemy import *
 import pymysql
 import pandas as pd
 import re
-import Ambassador
-import ShowTime
-import YahooTheaters
+# import Ambassador
+# import ShowTime
+# import YahooTheaters
 
-engine = create_engine('mysql+pymysql://root:12345678@localhost/movielover',echo = True)
+engine = create_engine('mysql+pymysql://admin:password/movielover',echo = True)
 
-host='localhost'
+host=''
 port=3306
-user='root'
-passwd='12345678'
+user='admin'
+passwd='password'
 database='movielover'
 
 conn=pymysql.connect(
@@ -268,6 +268,9 @@ def yahooplay(movie):
             if i["data-movie_time"][0:2] == '00':
                 i["data-movie_time"] ='24:'+ i["data-movie_time"][-2:]
                 print(i["data-movie_time"])
+            if i["data-movie_time"][0:2] == '01':
+                i["data-movie_time"] ='25:'+ i["data-movie_time"][-2:]
+                print(i["data-movie_time"])
             schedule_list.append(i["data-movie_time"])
             cate_list.append(i["data-movie_type"])
             date_list.append(today)
@@ -303,7 +306,8 @@ def outcome2():
         Column('type', String(255), nullable=False),
     )
 
-    yahooscreenings.drop(engine, checkfirst=False)
+    # meta.drop_all(engine, tables=None, checkfirst=True)
+    # yahooscreenings.drop(engine, checkfirst=False)
     yahooscreenings.create(engine, checkfirst=True)
 
     df_yahooSrceenings = pd.DataFrame(
@@ -325,7 +329,7 @@ if __name__ == '__main__':
     Intheaters(pageNumber)
     ThisWeekNew(pageNumber)
     outcome()
-    Ambassador.AmbassadorData()
+    # Ambassador.AmbassadorData()
     # ShowTime.showtimeData()
     alldata()
 

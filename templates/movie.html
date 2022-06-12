@@ -226,7 +226,7 @@
                 for (i=0 ; i<theaters.length ; i++){
 
                     let data=document.getElementById('frame');
-                    let newDiv=document.createElement('p');
+                    let newDiv = document.createElement('p');
                     data.appendChild(newDiv);
                     newDiv.className = "screening"
 
@@ -235,8 +235,28 @@
                     let time = times[i];
                     let type = types[i];
 
-                    let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type);
+                    let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type+" ");
                     newDiv.appendChild(dateText);
+                    
+                    let movie = document.getElementById("name_ZH");
+                    let nameText = movie.textContent;
+                    let link = document.createElement('a');
+                    let linkText = document.createTextNode("加入行事曆");
+                    newDiv.appendChild(link);
+                    link.appendChild(linkText);
+                    let timeSplit = time.split(':');
+                    let timeChange = '' + timeSplit[0]-8;
+                    let timeAdd = '' + (timeChange + 2);
+                    console.log(timeAdd);
+              
+                    if (timeChange < 10){
+                        timeChange = '0' + (timeSplit[0]-8);
+                    }
+                    if (timeAdd < 10){
+                        timeAdd = '0' + (timeAdd);
+                    }
+           
+                    link.href= "https://calendar.google.com/calendar/u/0/r/eventedit?text=" + nameText + "&location=" + theater + "&dates=" + todayYear + todayMonth + todayDate +"T"+ timeChange + timeSplit[1] +"00.000Z/" + todayYear + todayMonth + todayDate +"T"+ timeAdd + timeSplit[1] +"00.000Z";
                 }
             }
         })
@@ -247,39 +267,39 @@
     
     showtime_theater_id = [];
 
-    function getShowtime(){
-        url = 'https://capi.showtimes.com.tw/1/events/listForProgram/'+10701+'?date=2022-05-21'
-        fetch(url, {method:"GET"})
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) =>{
-                let theaterslist = data.payload;
-                // console.log(data.payload.events);
-                // console.log(data.payload.venues);
-                for (let i in theaterslist.venues){
-                    if (theaterslist.venues[i].name =="台北今日秀泰影城")
-                    showtime_theater_id.push(theaterslist.venues[i].id);
-                }
-                // theaterslist[i].venueId
-                for (let i in theaterslist.events){
-                    if (theaterslist.events[i].venueId == 971){
-                    console.log(theaterslist.events[i]);
-                    console.log(theaterslist.events[i].startedAt);
+    // function getShowtime(){
+    //     url = 'https://capi.showtimes.com.tw/1/events/listForProgram/'+10701+'?date=2022-05-21'
+    //     fetch(url, {method:"GET"})
+    //         .then((response) => {
+    //             return response.json();
+    //         })
+    //         .then((data) =>{
+    //             let theaterslist = data.payload;
+    //             // console.log(data.payload.events);
+    //             // console.log(data.payload.venues);
+    //             for (let i in theaterslist.venues){
+    //                 if (theaterslist.venues[i].name =="台北今日秀泰影城")
+    //                 showtime_theater_id.push(theaterslist.venues[i].id);
+    //             }
+    //             // theaterslist[i].venueId
+    //             for (let i in theaterslist.events){
+    //                 if (theaterslist.events[i].venueId == 971){
+    //                 console.log(theaterslist.events[i]);
+    //                 console.log(theaterslist.events[i].startedAt);
 
-                    let play = document.getElementById('intro');
-                    let eachplay = document.createElement("div");
-                    eachplay.className = 'getInfo';
-                    let playtime = document.createTextNode('今日秀泰 '+ theaterslist.events[i].startedAt);
-                    eachplay.appendChild(playtime);
-                    play.append(eachplay);
-                    }
-                }
-            })
-            .catch((err) => {
-                console.log('錯誤:', err);
-            });
-    }
+    //                 let play = document.getElementById('intro');
+    //                 let eachplay = document.createElement("div");
+    //                 eachplay.className = 'getInfo';
+    //                 let playtime = document.createTextNode('今日秀泰 '+ theaterslist.events[i].startedAt);
+    //                 eachplay.appendChild(playtime);
+    //                 play.append(eachplay);
+    //                 }
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             console.log('錯誤:', err);
+    //         });
+    // }
 
     function dateScreening(){
         let dateScreening = document.getElementById("movie_date").value;
@@ -335,8 +355,6 @@
                 }
 
                 for (i=0 ; i<theaters.length ; i++){
-
-
                     let data=document.getElementById('frame');
                     let newDiv=document.createElement('p');
                     data.appendChild(newDiv);
@@ -346,8 +364,31 @@
                     let time = times[i];
                     let type = types[i];
 
-                    let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type);
+                    let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type+" ");
                     newDiv.appendChild(dateText);
+                    
+                    let dateSplit = date.split('-');
+
+                    let movie = document.getElementById("name_ZH");
+                    let nameText = movie.textContent;
+                    let link = document.createElement('a');
+                    let linkText = document.createTextNode("加入行事曆");
+                    newDiv.appendChild(link);
+                    link.appendChild(linkText);
+                    let timeSplit = time.split(':');
+                    let timeChange = '' + timeSplit[0]-8;
+                    let timeAdd = '' + (timeChange + 2);
+                    console.log(timeAdd);
+              
+                    if (timeChange < 10){
+                        timeChange = '0' + (timeSplit[0]-8);
+                    }
+                    if (timeAdd < 10){
+                        timeAdd = '0' + (timeAdd);
+                    }
+           
+                    link.href= "https://calendar.google.com/calendar/u/0/r/eventedit?text=" + nameText + "&location=" + theater + "&dates=" + todayYear + dateSplit[0] + dateSplit[1] +"T"+ timeChange + timeSplit[1] +"00.000Z/" + todayYear + dateSplit[0] + dateSplit[1]+"T"+ timeAdd + timeSplit[1] +"00.000Z";
+
                 }
             }
         })
@@ -411,8 +452,6 @@
                 }
 
                 for (i=0 ; i<theaters.length ; i++){
-
-
                     let data=document.getElementById('frame');
                     let newDiv=document.createElement('p');
                     data.appendChild(newDiv);
@@ -422,8 +461,31 @@
                     let time = times[i];
                     let type = types[i];
 
-                    let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type);
+                    let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type+" ");
                     newDiv.appendChild(dateText);
+                    
+                    let dateSplit =date.split('-');
+                    console.log(dateSplit)
+                    let movie = document.getElementById("name_ZH");
+                    let nameText = movie.textContent;
+                    let link = document.createElement('a');
+                    let linkText = document.createTextNode("加入行事曆");
+                    newDiv.appendChild(link);
+                    link.appendChild(linkText);
+                    let timeSplit = time.split(':');
+                    let timeChange = '' + timeSplit[0]-8;
+                    let timeAdd = '' + (timeChange + 2);
+                    console.log(timeAdd);
+              
+                    if (timeChange < 10){
+                        timeChange = '0' + (timeSplit[0]-8);
+                    }
+                    if (timeAdd < 10){
+                        timeAdd = '0' + (timeAdd);
+                    }
+           
+                    link.href= "https://calendar.google.com/calendar/u/0/r/eventedit?text=" + nameText + "&location=" + theater + "&dates=" + todayYear + dateSplit[0] + dateSplit[1] +"T"+ timeChange + timeSplit[1] +"00.000Z/" + todayYear + dateSplit[0] + dateSplit[1] +"T"+ timeAdd + timeSplit[1] +"00.000Z";
+
                 }
             }
                 })
@@ -476,8 +538,6 @@
             console.log('錯誤:', err);
         });
     }
-
-
 
     function search(){
         let searchText=document.getElementById("searchText").value;
