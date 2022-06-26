@@ -196,11 +196,33 @@ span.right{
     width: 80%;
     margin: 10px auto;
 }
-.screening{
+/* .screening{
+
     margin-bottom: 10px;
     width: 50%;
     margin: 10px auto;
-
+} */
+#screening {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+#screening td, #screening th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+  
+#screening tr:nth-child(even){background-color: #f2f2f2;}
+  
+#screening tr:hover {background-color: #ddd;}
+  
+#screening th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #068d45de;
+    color: white;
 }
 .error{
     width: 50%;

@@ -7,7 +7,7 @@
     <title>MovieLover 場次表</title>
     <link rel="stylesheet" href="/layout/movie/layout.css">
 </head>
-<body onload="getMovie(),nowDate(),checkAPI()">
+<body id='body' onload="getMovie(),nowDate(),checkAPI()">
     <nav id="navbar">
         <div class="logo">
             <a href="/" style="text-decoration:none;color:white;">Movie Lover</a>
@@ -117,6 +117,7 @@
     let movie_name_ZH = '';
     let movie_name_EN = '';
     let poster_url = '';
+    let release_date ='';
     function getMovie(){
         url=page[0]+'//'+page[2]+"/api/"+page[3]+'/'+page[4];
         fetch(url, {method:"GET"})
@@ -127,9 +128,11 @@
             console.log(data)
             let movies=data.data;
             poster_url = movies.poster_url;
-            let data_id = movies.index;
             movie_name_ZH = movies.movie_name_ZH;
             movie_name_EN = movies.movie_name_EN;
+            release_date = movies.release_date;
+            let data_id = movies.index;
+
             let movie_info = movies.movie_info;
 
             let poster = document.getElementById("poster");
@@ -223,27 +226,68 @@
                     types.push(type);
                 }
 
+                let table = document.createElement('table');
+                table.id = 'screening';
+                let thead = document.createElement('thead');
+                let tbody = document.createElement('tbody');
+
+                table.appendChild(thead);
+                table.appendChild(tbody);
+
+                // Adding the entire table to the body tag
+                document.getElementById('frame').appendChild(table);
+
+                let row_1 = document.createElement('tr');
+                let heading_1 = document.createElement('th');
+                heading_1.innerHTML = "日期";
+                let heading_2 = document.createElement('th');
+                heading_2.innerHTML = "戲院";
+                let heading_3 = document.createElement('th');
+                heading_3.innerHTML = "時間";
+                let heading_4 = document.createElement('th');
+                heading_4.innerHTML = "類型";
+                let heading_5 = document.createElement('th');
+                heading_5.innerHTML = "加入行程";
+
+                row_1.appendChild(heading_1);
+                row_1.appendChild(heading_2);
+                row_1.appendChild(heading_3);
+                row_1.appendChild(heading_4);
+                row_1.appendChild(heading_5);
+                thead.appendChild(row_1);
+
                 for (i=0 ; i<theaters.length ; i++){
-
-                    let data=document.getElementById('frame');
-                    let newDiv = document.createElement('p');
-                    data.appendChild(newDiv);
-                    newDiv.className = "screening"
-
                     let date = dates[i];
                     let theater = theaters[i];
                     let time = times[i];
                     let type = types[i];
 
-                    let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type+" ");
-                    newDiv.appendChild(dateText);
-                    
-                    let movie = document.getElementById("name_ZH");
-                    let nameText = movie.textContent;
+                    let row_2 = document.createElement('tr');
+                    let row_2_data_1 = document.createElement('td');
+                    row_2_data_1.innerHTML = date;
+                    let row_2_data_2 = document.createElement('td');
+                    row_2_data_2.innerHTML = theater;
+                    let row_2_data_3 = document.createElement('td');
+                    row_2_data_3.innerHTML = time;
+                    let row_2_data_4 = document.createElement('td');
+                    row_2_data_4.innerHTML = type;
+                    let row_2_data_5 = document.createElement('td');
+
+                    row_2.appendChild(row_2_data_1);
+                    row_2.appendChild(row_2_data_2);
+                    row_2.appendChild(row_2_data_3);
+                    row_2.appendChild(row_2_data_4);
+        
                     let link = document.createElement('a');
                     let linkText = document.createTextNode("加入行事曆");
-                    newDiv.appendChild(link);
+       
+                    row_2.appendChild(row_2_data_5);
+                    row_2_data_5.appendChild(link)
                     link.appendChild(linkText);
+                    tbody.appendChild(row_2);
+
+                    let movie = document.getElementById("name_ZH");
+                    let nameText = movie.textContent;
                     let timeSplit = time.split(':');
                     let timeChange = '' + timeSplit[0]-8;
                     let timeAdd = '' + (timeChange + 2);
@@ -354,27 +398,79 @@
                     types.push(type);
                 }
 
+                let table = document.createElement('table');
+                table.id = 'screening';
+                let thead = document.createElement('thead');
+                let tbody = document.createElement('tbody');
+
+                table.appendChild(thead);
+                table.appendChild(tbody);
+
+                // Adding the entire table to the body tag
+                document.getElementById('frame').appendChild(table);
+
+                let row_1 = document.createElement('tr');
+                let heading_1 = document.createElement('th');
+                heading_1.innerHTML = "日期";
+                let heading_2 = document.createElement('th');
+                heading_2.innerHTML = "戲院";
+                let heading_3 = document.createElement('th');
+                heading_3.innerHTML = "時間";
+                let heading_4 = document.createElement('th');
+                heading_4.innerHTML = "類型";
+                let heading_5 = document.createElement('th');
+                heading_5.innerHTML = "加入行程";
+
+                row_1.appendChild(heading_1);
+                row_1.appendChild(heading_2);
+                row_1.appendChild(heading_3);
+                row_1.appendChild(heading_4);
+                row_1.appendChild(heading_5);
+                thead.appendChild(row_1);
+
                 for (i=0 ; i<theaters.length ; i++){
-                    let data=document.getElementById('frame');
-                    let newDiv=document.createElement('p');
-                    data.appendChild(newDiv);
-                    newDiv.className = "screening"
+                    // let data=document.getElementById('frame');
+                    // let newDiv=document.createElement('p');
+                    // data.appendChild(newDiv);
+                    // newDiv.className = "screening"
                     let date = dates[i];
                     let theater = theaters[i];
                     let time = times[i];
                     let type = types[i];
 
-                    let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type+" ");
-                    newDiv.appendChild(dateText);
-                    
+                    // let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type+" ");
+                    // newDiv.appendChild(dateText);
+                    let row_2 = document.createElement('tr');
+                    let row_2_data_1 = document.createElement('td');
+                    row_2_data_1.innerHTML = date;
+                    let row_2_data_2 = document.createElement('td');
+                    row_2_data_2.innerHTML = theater;
+                    let row_2_data_3 = document.createElement('td');
+                    row_2_data_3.innerHTML = time;
+                    let row_2_data_4 = document.createElement('td');
+                    row_2_data_4.innerHTML = type;
+                    let row_2_data_5 = document.createElement('td');
+
+                    let link = document.createElement('a');
+                    let linkText = document.createTextNode("加入行事曆");
+
+                    row_2.appendChild(row_2_data_1);
+                    row_2.appendChild(row_2_data_2);
+                    row_2.appendChild(row_2_data_3);
+                    row_2.appendChild(row_2_data_4);
+
+                    row_2.appendChild(row_2_data_5);
+                    row_2_data_5.appendChild(link)
+                    link.appendChild(linkText);
+                    tbody.appendChild(row_2);
+
                     let dateSplit = date.split('-');
 
                     let movie = document.getElementById("name_ZH");
                     let nameText = movie.textContent;
-                    let link = document.createElement('a');
-                    let linkText = document.createTextNode("加入行事曆");
-                    newDiv.appendChild(link);
-                    link.appendChild(linkText);
+                    
+                    // newDiv.appendChild(link);
+                    // link.appendChild(linkText);
                     let timeSplit = time.split(':');
                     let timeChange = '' + timeSplit[0]-8;
                     let timeAdd = '' + (timeChange + 2);
@@ -418,7 +514,7 @@
                 element.removeChild(element.firstChild);
             }
             console.log(data.data);
-            console.log(data.error);
+            
             if (data.error == true){
                 let data = document.getElementById('frame');
                 let newDiv=document.createElement('div');
@@ -451,27 +547,70 @@
                     types.push(type);
                 }
 
+                let table = document.createElement('table');
+                table.id = 'screening';
+                let thead = document.createElement('thead');
+                let tbody = document.createElement('tbody');
+
+                table.appendChild(thead);
+                table.appendChild(tbody);
+
+                // Adding the entire table to the body tag
+                document.getElementById('frame').appendChild(table);
+
+                let row_1 = document.createElement('tr');
+                let heading_1 = document.createElement('th');
+                heading_1.innerHTML = "日期";
+                let heading_2 = document.createElement('th');
+                heading_2.innerHTML = "戲院";
+                let heading_3 = document.createElement('th');
+                heading_3.innerHTML = "時間";
+                let heading_4 = document.createElement('th');
+                heading_4.innerHTML = "類型";
+                let heading_5 = document.createElement('th');
+                heading_5.innerHTML = "加入行程";
+
+                row_1.appendChild(heading_1);
+                row_1.appendChild(heading_2);
+                row_1.appendChild(heading_3);
+                row_1.appendChild(heading_4);
+                row_1.appendChild(heading_5);
+                thead.appendChild(row_1);
+
                 for (i=0 ; i<theaters.length ; i++){
-                    let data=document.getElementById('frame');
-                    let newDiv=document.createElement('p');
-                    data.appendChild(newDiv);
-                    newDiv.className = "screening"
                     let date = dates[i];
                     let theater = theaters[i];
                     let time = times[i];
                     let type = types[i];
 
-                    let dateText = document.createTextNode(date+" "+theater+" "+time+" "+type+" ");
-                    newDiv.appendChild(dateText);
-                    
-                    let dateSplit =date.split('-');
-                    console.log(dateSplit)
-                    let movie = document.getElementById("name_ZH");
-                    let nameText = movie.textContent;
+                    let row_2 = document.createElement('tr');
+                    let row_2_data_1 = document.createElement('td');
+                    row_2_data_1.innerHTML = date;
+                    let row_2_data_2 = document.createElement('td');
+                    row_2_data_2.innerHTML = theater;
+                    let row_2_data_3 = document.createElement('td');
+                    row_2_data_3.innerHTML = time;
+                    let row_2_data_4 = document.createElement('td');
+                    row_2_data_4.innerHTML = type;
+                    let row_2_data_5 = document.createElement('td');
+
+                    row_2.appendChild(row_2_data_1);
+                    row_2.appendChild(row_2_data_2);
+                    row_2.appendChild(row_2_data_3);
+                    row_2.appendChild(row_2_data_4);
+
                     let link = document.createElement('a');
                     let linkText = document.createTextNode("加入行事曆");
-                    newDiv.appendChild(link);
+                    
+                    row_2.appendChild(row_2_data_5);
+                    row_2_data_5.appendChild(link)
                     link.appendChild(linkText);
+                    tbody.appendChild(row_2);
+
+                    let dateSplit =date.split('-');
+
+                    let movie = document.getElementById("name_ZH");
+                    let nameText = movie.textContent;
                     let timeSplit = time.split(':');
                     let timeChange = '' + timeSplit[0]-8;
                     let timeAdd = '' + (timeChange + 2);
@@ -511,7 +650,8 @@
                     body:JSON.stringify({
                         "movie_name_ZH":movie_name_ZH,
                         "movie_name_EN":movie_name_EN,
-                        'poster_url':poster_url
+                        'poster_url':poster_url,
+                        'release_date':release_date
                     }),
                     headers: {
                         'Content-Type': 'application/json'
@@ -566,8 +706,15 @@
     function signoutAPI(){
         url="/api/member"
         fetch(url, {method: 'DELETE'})
-        .then(() => {
-            window.location.href="/";
+        .then((response) => {
+            console.log(response);
+            return response.json(); 
+        })
+        .then((jsonData) => {
+            if (jsonData.ok == true){
+                window.location.href="/";
+            }
+
         })
         .catch((err) => {
             console.log('錯誤:', err);

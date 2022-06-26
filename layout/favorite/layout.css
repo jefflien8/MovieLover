@@ -189,3 +189,10 @@ nav .searchbar input[type="text"].active {
     padding: 0 10px;
     transition: all 0.5s 0.2s ease;
 }
+
+.fav{
+    text-align: center;
+    margin-top: 20px;
+    font-size: large;
+    color:black;
+}

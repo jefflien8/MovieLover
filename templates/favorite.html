@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MovieLover</title>
-    <link rel="stylesheet" href="layout/search/layout.css">
+    <link rel="stylesheet" href="layout/favorite/layout.css">
 </head>
 <body onload="checkAPI(),getFavorite()">
     <nav id="navbar">
@@ -48,8 +48,8 @@
         </div>
     </div>
     
-    <div style="text-align: center;margin-top: 20px;">您的收藏：</div>
-    <div class=frame id=0 style="margin-top: 50px;"></div>
+    <div class=fav>您的收藏：</div>
+    <div class=frame id=0 style="margin-top: 20px;margin-bottom: 50px;"></div>
     <div id="nothing" style="text-align: center;"></div>
 
     <div class="bottom">
@@ -73,6 +73,7 @@
             let movies_name_ZH = [];
             let movies_name_EN = [];
             let fav_indexs = [];
+            let release_dates = [];
             for (let movie in movies){
                 if (movies[movie].poster_url != null){
                     let poster_url =movies[movie].poster_url;
@@ -85,6 +86,8 @@
                     movies_name_EN.push(movie_name_EN)
                     let fav_index = movies[movie].fav_index;
                     fav_indexs.push(fav_index);
+                    let release_date = movies[movie].release_date;
+                    release_dates.push(release_date);
                 }
 
             }
@@ -108,7 +111,7 @@
                     word.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;font-weight: 700;font-size: 16px;line-height: 16px;margin-top: 15px;margin-left: 15px;margin-bottom:0px;"
                     newDiv.appendChild(word);  
                     let name_ZH = movies_name_ZH[i];
-                    let ZHnameNode =document.createTextNode(name_ZH+' (目前無放映)');
+                    let ZHnameNode =document.createTextNode(name_ZH);
                     word.appendChild(ZHnameNode);
 
                     let flex=document.createElement('div');
@@ -123,54 +126,80 @@
                     let ENnameNode = document.createTextNode(name_EN);
                     left.appendChild(ENnameNode);
 
+                    let flexDiv=document.createElement('div');
+                    flexDiv.style.cssText="display: flex;width:250px"
+                    word.appendChild(flexDiv);
+
+                    let date = document.createElement('p');
+                    date.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;width: 250px;font-weight: 400;font-size: 16px;line-height: 20px;margin-top: 0px;margin-bottom: 15px;margin-right: 5px;flex: auto;text-align:left;"
+                    flexDiv.appendChild(date);
+
+                    let release_date = release_dates[i].split('-');
+                    let release_date_Node = document.createTextNode('上映日期：'+ release_date[1]+'/'+release_date[2]+' (已下映)');
+                    date.appendChild(release_date_Node);
+
                     let delBTN = document.createElement('button');
                     delBTN.value = fav_indexs[i];
                     delBTN.id = fav_indexs[i];
                     delBTN.onclick = function(){DelFavorite(delBTN.id)};
+                    delBTN.style.cssText = 'margin-bottom:5px';
                     let del = document.createTextNode('刪除');
                     delBTN.appendChild(del);
-                    flex.appendChild(delBTN);
+                    flexDiv.appendChild(delBTN);
                 }
                 else{
-                let spotList=document.getElementById('0');
-                let newDiv=document.createElement('div');
-                spotList.appendChild(newDiv);
-                newDiv.className='pic';
-                
-                let url = document.createElement("a");
-                url.setAttribute('href',page[0]+'movie/'+data_ids[i])
-                newDiv.appendChild(url);
+                    let spotList=document.getElementById('0');
+                    let newDiv=document.createElement('div');
+                    spotList.appendChild(newDiv);
+                    newDiv.className='pic';
+                    
+                    let url = document.createElement("a");
+                    url.setAttribute('href',page[0]+'movie/'+data_ids[i])
+                    newDiv.appendChild(url);
 
-                let image = document.createElement('img');
-                url.appendChild(image);
-                let objectURL =poster_urls[i];
-                image.src = objectURL;        
+                    let image = document.createElement('img');
+                    url.appendChild(image);
+                    let objectURL =poster_urls[i];
+                    image.src = objectURL;        
 
-                let word = document.createElement('p');
-                word.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;font-weight: 700;font-size: 16px;line-height: 16px;margin-top: 15px;margin-left: 15px;margin-bottom:0px;"
-                newDiv.appendChild(word);  
-                let name_ZH = movies_name_ZH[i];
-                let ZHnameNode =document.createTextNode(name_ZH);
-                word.appendChild(ZHnameNode);
-                let flex=document.createElement('div');
-                flex.style.cssText="display: flex;width:250px"
-                word.appendChild(flex);
+                    let word = document.createElement('p');
+                    word.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;font-weight: 700;font-size: 16px;line-height: 16px;margin-top: 15px;margin-left: 15px;margin-bottom:0px;"
+                    newDiv.appendChild(word);  
+                    let name_ZH = movies_name_ZH[i];
+                    let ZHnameNode =document.createTextNode(name_ZH);
+                    word.appendChild(ZHnameNode);
+                    let flex=document.createElement('div');
+                    flex.style.cssText="display: flex;width:250px"
+                    word.appendChild(flex);
 
-                let left = document.createElement('p');
-                left.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;width: 250px;font-weight: 400;font-size: 16px;line-height: 20px;margin-top: 15px;margin-bottom: 15px;margin-right: 5px;flex: auto;text-align:left;"
-                flex.appendChild(left);
+                    let left = document.createElement('p');
+                    left.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;width: 250px;font-weight: 400;font-size: 16px;line-height: 22px;margin-top: 15px;margin-bottom: 15px;margin-right: 5px;flex: auto;text-align:left;"
+                    flex.appendChild(left);
 
-                let name_EN = movies_name_EN[i];
-                let ENnameNode = document.createTextNode(name_EN);
-                left.appendChild(ENnameNode);
+                    let name_EN = movies_name_EN[i];
+                    let ENnameNode = document.createTextNode(name_EN);
+                    left.appendChild(ENnameNode);
+                    
+                    let flexDiv=document.createElement('div');
+                    flexDiv.style.cssText="display: flex;width:250px"
+                    word.appendChild(flexDiv);
 
-                let delBTN = document.createElement('button');
-                delBTN.value = fav_indexs[i];
-                delBTN.id = fav_indexs[i];
-                delBTN.onclick = function(){DelFavorite(delBTN.id)};
-                let del = document.createTextNode('刪除');
-                delBTN.appendChild(del);
-                flex.appendChild(delBTN);
+                    let date = document.createElement('p');
+                    date.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;width: 250px;font-weight: 400;font-size: 16px;line-height: 20px;margin-top: 0px;margin-bottom: 15px;margin-right: 5px;flex: auto;text-align:left;"
+                    flexDiv.appendChild(date);
+
+                    let release_date = release_dates[i].split('-');
+                    let release_date_Node = document.createTextNode('上映日期：'+ release_date[1]+'/'+release_date[2]);
+                    date.appendChild(release_date_Node);
+
+                    let delBTN = document.createElement('button');
+                    delBTN.value = fav_indexs[i];
+                    delBTN.id = fav_indexs[i];
+                    delBTN.onclick = function(){DelFavorite(delBTN.id)};
+                    delBTN.style.cssText = 'margin-bottom:5px';
+                    let del = document.createTextNode('刪除');
+                    delBTN.appendChild(del);
+                    flexDiv.appendChild(delBTN);
                 }
             }                
 

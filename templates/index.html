@@ -62,7 +62,7 @@
 
     </div>
     
-    <div class=frame id=0 style="margin-top: 50px;"></div>
+    <div class=frame id=0 style="margin-top: 50px;margin-bottom: 50px;"></div>
     <div id="nothing" style="text-align: center;"></div>
 
     <div class="bottom">
@@ -90,6 +90,7 @@
                     let data_ids = [];
                     let movies_name_ZH = [];
                     let movies_name_EN = [];
+                    let release_dates = [];
                     for (let movie in movies){
                         if (movies[movie].poster_url != null){
                             let poster_url =movies[movie].poster_url;
@@ -99,7 +100,9 @@
                             let movie_name_ZH =movies[movie].movie_name_ZH;
                             movies_name_ZH.push(movie_name_ZH);
                             let movie_name_EN =movies[movie].movie_name_EN;
-                            movies_name_EN.push(movie_name_EN)
+                            movies_name_EN.push(movie_name_EN);
+                            let release_date = movies[movie].release_date;
+                            release_dates.push(release_date);
                         }
                     }
                     
@@ -124,17 +127,30 @@
                         let name_ZH = movies_name_ZH[i];
                         let ZHnameNode =document.createTextNode(name_ZH);
                         word.appendChild(ZHnameNode);
+
                         let flex=document.createElement('div');
                         flex.style.cssText="display: flex;width:250px"
                         word.appendChild(flex);
 
                         let left = document.createElement('p');
-                        left.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;width: 250px;font-weight: 400;font-size: 16px;line-height: 20px;margin-top: 15px;margin-bottom: 15px;margin-right: 5px;flex: auto;text-align:left;"
+                        left.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;width: 250px;font-weight: 400;font-size: 16px;line-height: 22px;margin-top: 15px;margin-bottom: 15px;margin-right: 5px;flex: auto;text-align:left;"
                         flex.appendChild(left);
 
                         let name_EN = movies_name_EN[i];
                         let ENnameNode = document.createTextNode(name_EN);
                         left.appendChild(ENnameNode);
+
+                        let flexDiv=document.createElement('div');
+                        flexDiv.style.cssText="display: flex;width:250px"
+                        word.appendChild(flexDiv);
+
+                        let date = document.createElement('p');
+                        date.style.cssText="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;word-wrap: break-word;width: 250px;font-weight: 400;font-size: 16px;line-height: 20px;margin-top: 0px;margin-bottom: 15px;margin-right: 5px;flex: auto;text-align:left;"
+                        flexDiv.appendChild(date);
+
+                        let release_date = release_dates[i].split('-');
+                        let release_date_Node = document.createTextNode('上映日期：'+ release_date[1]+'/'+release_date[2]);
+                        date.appendChild(release_date_Node);
 
                         // let right=document.createElement('div');
                         // right.style.cssText="font-weight: 400;font-size: 16px;line-height: 13px;margin-top: 15px;margin-bottom: 15px;margin-right:10px;text-align:right;flex: auto;;"
@@ -207,8 +223,11 @@
                 console.log(response);
                 return response.json(); 
             })
-            .then(() => {
-                location.reload();
+            .then((jsonData) => {
+                if (jsonData.ok == true){
+                    window.location.href="/";
+                    // location.reload();  
+                }
             })  
             .catch((err) => {
                 console.log('錯誤:', err);
