@@ -19,7 +19,7 @@
         </div>
 
         <div class="searchbar">
-            <input type="text" placeholder="搜尋電影名稱" id="searchText">
+            <input onkeydown="checkEnter(event)" onkeydown="checkEnter(event)" type="text" placeholder="搜尋電影名稱" id="searchText">
             <button onclick="search()" style="
             background: #efee96;border-radius: 0px 5px 5px 0px;border-width: 0px;">
             搜尋
@@ -216,8 +216,8 @@
                 let types = [];
                 for (let screening in screenings){
                     let date = screenings[screening].date;
-                    let MonthDay = date.split("2022-");
-                    dates.push(MonthDay[1]);
+                    let MonthDay = date.substr(5,5);
+                    dates.push(MonthDay);
                     let theater = screenings[screening].theater;
                     theaters.push(theater);
                     let time = screenings[screening].time;
@@ -388,8 +388,8 @@
                 let types = [];
                 for (let screening in screenings){
                     let date = screenings[screening].date;
-                    let MonthDay = date.split("2022-");
-                    dates.push(MonthDay[1]);
+                    let MonthDay = date.substr(5,5);
+                    dates.push(MonthDay);
                     let theater = screenings[screening].theater;
                     theaters.push(theater);
                     let time = screenings[screening].time;
@@ -537,8 +537,8 @@
                 let types = [];
                 for (let screening in screenings){
                     let date = screenings[screening].date;
-                    let MonthDay = date.split("2022-");
-                    dates.push(MonthDay[1]);
+                    let MonthDay = date.substr(5,5);
+                    dates.push(MonthDay);
                     let theater = screenings[screening].theater;
                     theaters.push(theater);
                     let time = screenings[screening].time;
@@ -677,6 +677,12 @@
         .catch((err) => {
             console.log('錯誤:', err);
         });
+    }
+
+    function checkEnter(event) {
+        if (event.keyCode === 13) {
+            search();
+        }
     }
 
     function search(){

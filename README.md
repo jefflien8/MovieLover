@@ -1,8 +1,7 @@
 # MovieLover
 
-As a movie lover, I always have a significant problem finding non-mainstream movie screenings, so I create a solution to fix my problem.
-_MovieLover_ is a website that contains movie screenings in Taipei's theaters.
-Users can easily find their favorite movie screening and add it to their Google calendar.
+As a movie enthusiast, I find it's challenging to locate venues and showtimes for non-mainstream films. That's why my project, MovieLover, came to fruition! Audiences can easily discover showtimes for the movies they want to watch and add them to their Google Calendar! 
+I hope everyone enjoys it and has a great time at the movies!
 
 ## Technique
 ### Frontend

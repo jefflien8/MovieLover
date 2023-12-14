@@ -19,7 +19,7 @@
         </div>
 
         <div class="searchbar">
-            <input type="text" placeholder="搜尋電影名稱" id="searchText">
+            <input onkeydown="checkEnter(event)" type="text" placeholder="搜尋電影名稱" id="searchText">
             <button onclick="search()" style="
             background: #efee96;border-radius: 0px 5px 5px 0px;border-width: 0px;">
             搜尋
@@ -152,6 +152,12 @@
         });
     
     }
+
+    function checkEnter(event) {
+            if (event.keyCode === 13) {
+                search();
+            }
+        }
 
     function search(){
         let searchText=document.getElementById("searchText").value;

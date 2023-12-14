@@ -8,7 +8,7 @@
     <title>Movielover</title>
     <link rel="stylesheet" href="layout/login/layout.css">
 </head>
-<body onload="checkAPI()">
+<body onload="checkAPI(),defaultLogin()">
     <nav id="navbar">
         <div class="logo">
             <a href="/" style="text-decoration:none;color:white;">Movie Lover</a>
@@ -182,6 +182,11 @@
         .catch((err) => {
             console.log('錯誤:', err);
         });
+    }
+
+    function defaultLogin(){
+        document.getElementById("email").value = "123";
+        document.getElementById("password").value = "123";
     }
 </script>
 <!-- <script src="https://apis.google.com/js/platform.js" async defer></script>
